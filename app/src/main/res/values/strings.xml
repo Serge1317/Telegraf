@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Telegraf</string>
+    <string name="create_group">Создать группу</string>
+    <string name="secret_chat">Создать секретную группу</string>
+    <string name="create_channel">Создать канал</string>
+    <string name="contacts">Контакты</string>
+    <string name="phone">Телефон</string>
+    <string name="favorites">Избранное</string>
+    <string name="settings">Настройки</string>
+    <string name="invite">Пригласить друзей</string>
+    <string name="help">Вопросы об Telegraf</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
