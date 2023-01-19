@@ -1,4 +1,4 @@
-package com.example.telegraf.ui
+package com.example.telegraf.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,17 +9,9 @@ import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChatsBinding
 import com.example.telegraf.databinding.FragmentSettingsBinding
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
-    private lateinit var mBinding: FragmentSettingsBinding;
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        mBinding = FragmentSettingsBinding.inflate(layoutInflater);
-        return mBinding.root;
-    }
 
     override fun onResume() {
         super.onResume()
