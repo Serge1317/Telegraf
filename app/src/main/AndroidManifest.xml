@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Telegraf.Light">
         <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="false"
+            android:label="@string/title_activity_register"
+            android:theme="@style/Theme.Telegraf.Light.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

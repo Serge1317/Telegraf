@@ -4,13 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/header.xml" value="0.184" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/ic_btn_action_menu.xml" value="0.1825" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/ic_btn_action_menu_edit.xml" value="0.145" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/ic_btn_action_menu_exit.xml" value="0.1825" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/ic_launcher_background.xml" value="0.184" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/drawable/ripple_effect.xml" value="0.189" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout-v23/fragment_settings.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/activity_register.xml" value="0.2015625" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/content_register.xml" value="0.2015625" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_base.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_chats.xml" value="0.19375" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_enter_code.xml" value="0.33" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_enter_phone_number.xml" value="0.22" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/menu/settings_action_menu.xml" value="0.2015625" />
       </map>
     </option>
   </component>
