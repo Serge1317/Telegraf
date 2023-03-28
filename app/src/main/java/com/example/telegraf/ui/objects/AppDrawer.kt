@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.telegraf.R
 import com.example.telegraf.ui.fragments.SettingsFragment
+import com.example.telegraf.utilities.replaceFragment
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
@@ -81,9 +82,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
                 override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*>): Boolean {
                     //Toast.makeText(applicationContext, position.toString(), Toast.LENGTH_SHORT).show();
                     when(position){
-                        7 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .addToBackStack(null)
-                            .replace(R.id.registerDataContainer, SettingsFragment()).commit();
+                        7 -> mainActivity.replaceFragment(SettingsFragment())
                     }
                     return false
                 }

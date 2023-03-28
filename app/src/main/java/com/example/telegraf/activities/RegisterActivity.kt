@@ -7,6 +7,7 @@ import com.example.telegraf.R
 
 import com.example.telegraf.databinding.ActivityRegisterBinding
 import com.example.telegraf.ui.fragments.EnterPhoneNumberFragment
+import com.example.telegraf.utilities.replaceFragment
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -24,9 +25,7 @@ class RegisterActivity : AppCompatActivity() {
         mToolbar = mBinding.registerToolbar;
         setSupportActionBar(mToolbar)
         this.title = this.getString(R.string.register_title_your_phone)
-        this.supportFragmentManager.beginTransaction()
-            .add(R.id.registerDataContainer, EnterPhoneNumberFragment())
-            .commit();
+        this.replaceFragment(EnterPhoneNumberFragment())
     }
 
 }

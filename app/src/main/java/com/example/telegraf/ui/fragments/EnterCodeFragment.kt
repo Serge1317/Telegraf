@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentEnterCodeBinding
+import com.example.telegraf.utilities.AppTextWatcher
+import com.example.telegraf.utilities.showToast
 
 
 class EnterCodeFragment : Fragment(R.layout.fragment_enter_code) {
@@ -26,21 +28,17 @@ class EnterCodeFragment : Fragment(R.layout.fragment_enter_code) {
         _binding = FragmentEnterCodeBinding.inflate(inflater, container, false);
         return binding.root;
     }
-    override fun onStart(){
+    override fun onStart() {
         super.onStart();
-        binding.registerInputCode.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?){
-                val code: String = binding.registerInputCode.text.toString();
-                if(code.length == 6){
-                    verifyCode()
-                }
+        binding.registerInputCode.addTextChangedListener(AppTextWatcher {
+            val code: String = binding.registerInputCode.text.toString();
+            if (code.length == 6) {
+                verifyCode()
             }
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int){}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){}
         })
     }
     private fun verifyCode(){
-        Toast.makeText(context, "все ок код -норм!", Toast.LENGTH_SHORT).show();
+        showToast("код норм - (6 символов)")
     }
     override fun onDestroy(){
         super.onDestroy()

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentEnterPhoneNumberBinding
+import com.example.telegraf.utilities.replaceFragment
+import com.example.telegraf.utilities.showToast
 
 
 class EnterPhoneNumberFragment : Fragment(R.layout.fragment_enter_phone_number) {
@@ -32,12 +34,9 @@ class EnterPhoneNumberFragment : Fragment(R.layout.fragment_enter_phone_number) 
 
     private fun onSend() {
         if(mBinding.registerInputPhoneNumber.text.toString().isEmpty()){
-            Toast.makeText(context, getString(R.string.enter_your_phone_number), Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.enter_your_phone_number))
         }else{
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.registerDataContainer, EnterCodeFragment())
-                .addToBackStack(null)
-                .commit();
+           replaceFragment(EnterCodeFragment())
         }
     }
 

@@ -8,6 +8,8 @@ import com.example.telegraf.activities.RegisterActivity
 import com.example.telegraf.databinding.ActivityMainBinding
 import com.example.telegraf.ui.fragments.ChatsFragment
 import com.example.telegraf.ui.objects.AppDrawer
+import com.example.telegraf.utilities.replaceActivity
+import com.example.telegraf.utilities.replaceFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,16 +34,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         // если пользователь не зарегистрировался то перекидаем его на активити с регистрацией (там два фрагмента)
-        if(false){
+        if(true){
             this.setSupportActionBar(toolbar); // сначала setSupport а потом create (иначе не работает бутерброд)
             mAppDrawer.create();
-            this.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.registerDataContainer, ChatsFragment())
-                .commit();
+            replaceFragment(ChatsFragment())
         }else{
-            val intent = Intent(this, RegisterActivity::class.java)
-            this.startActivity(intent);
+            replaceActivity(RegisterActivity())
         }
 
     }
