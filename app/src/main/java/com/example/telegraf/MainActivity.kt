@@ -1,6 +1,5 @@
 package com.example.telegraf
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
@@ -8,6 +7,8 @@ import com.example.telegraf.activities.RegisterActivity
 import com.example.telegraf.databinding.ActivityMainBinding
 import com.example.telegraf.ui.fragments.ChatsFragment
 import com.example.telegraf.ui.objects.AppDrawer
+import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.utilities.initFirebase
 import com.example.telegraf.utilities.replaceActivity
 import com.example.telegraf.utilities.replaceFragment
 
@@ -30,17 +31,16 @@ class MainActivity : AppCompatActivity() {
     private fun initFields(){
         toolbar = binding.mainToolbar;
         mAppDrawer = AppDrawer(this, toolbar);
+        initFirebase()
     }
 
     private fun initFunc() {
-        // если пользователь не зарегистрировался то перекидаем его на активити с регистрацией (там два фрагмента)
-        if(true){
+        if(AUTH.currentUser != null){
             this.setSupportActionBar(toolbar); // сначала setSupport а потом create (иначе не работает бутерброд)
             mAppDrawer.create();
-            replaceFragment(ChatsFragment())
+            replaceFragment(ChatsFragment(), false)
         }else{
             replaceActivity(RegisterActivity())
         }
-
     }
 }

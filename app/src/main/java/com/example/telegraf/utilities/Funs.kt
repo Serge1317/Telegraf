@@ -16,12 +16,19 @@ fun AppCompatActivity.replaceActivity(activity: AppCompatActivity){
     this.startActivity(intent);
     this.finish() // чтобы активити из которого вызвалась эта функция было завершено, а не висело в стеке
 }
-fun AppCompatActivity.replaceFragment(fragment: Fragment){
-    this.supportFragmentManager
-        .beginTransaction()
-        .replace(R.id.dataContainer, fragment)
-        .addToBackStack(null)
-        .commit();
+fun AppCompatActivity.replaceFragment(fragment: Fragment, addToStack: Boolean = true){
+    if(addToStack) {
+        this.supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.dataContainer, fragment)
+            .addToBackStack(null)
+            .commit();
+    }else{
+        this.supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.dataContainer, fragment)
+            .commit();
+    }
 }
 fun Fragment.replaceFragment(fragment: Fragment){
     this.parentFragmentManager

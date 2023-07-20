@@ -21,6 +21,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- phone number fragment -->
-    <dimen name="appPadding">5dp</dimen>
+    <dimen name="appPadding">10dp</dimen>
 
 </resources>

@@ -7,6 +7,7 @@ import com.example.telegraf.R
 
 import com.example.telegraf.databinding.ActivityRegisterBinding
 import com.example.telegraf.ui.fragments.EnterPhoneNumberFragment
+import com.example.telegraf.utilities.initFirebase
 import com.example.telegraf.utilities.replaceFragment
 
 class RegisterActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRegisterBinding.inflate(layoutInflater);
         setContentView(mBinding.root);
+        initFirebase()
 
     }
     override fun onStart(){
@@ -25,7 +27,7 @@ class RegisterActivity : AppCompatActivity() {
         mToolbar = mBinding.registerToolbar;
         setSupportActionBar(mToolbar)
         this.title = this.getString(R.string.register_title_your_phone)
-        this.replaceFragment(EnterPhoneNumberFragment())
+        this.replaceFragment(EnterPhoneNumberFragment(), false)
     }
 
 }

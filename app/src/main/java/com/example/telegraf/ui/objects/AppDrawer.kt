@@ -59,7 +59,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
                     .withIcon(R.drawable.ic_menu_phone),
                 PrimaryDrawerItem().withIdentifier(105)
                     .withIconTintingEnabled(true)
-                    .withName(R.string.settings)
+                    .withName(R.string.favorites)
                     .withSelectable(false)
                     .withIcon(R.drawable.ic_menu_favorites),
                 PrimaryDrawerItem().withIdentifier(106)

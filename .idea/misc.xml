@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -16,13 +15,13 @@
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_base.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_chats.xml" value="0.19375" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_enter_code.xml" value="0.33" />
-        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_enter_phone_number.xml" value="0.22" />
+        <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_enter_phone_number.xml" value="0.33" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="..\:/Users/Serge/AndroidStudioProjects/Telegraf/app/src/main/res/menu/settings_action_menu.xml" value="0.2015625" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
