@@ -3,6 +3,7 @@ package com.example.telegraf.ui.objects
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegraf.R
 import com.example.telegraf.ui.fragments.SettingsFragment
 import com.example.telegraf.utilities.replaceFragment
@@ -18,10 +19,29 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolbar) {
     private lateinit var drawer: Drawer;
     private lateinit var header: AccountHeader;
+    private lateinit var drawerLayout: DrawerLayout;
 
     fun create(){
         createHeader();
         createDrawer();
+        drawerLayout = drawer.drawerLayout;
+    }
+    fun drawerEnable(){
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false);
+        drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true;
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        toolbar.setNavigationOnClickListener{
+            drawer.openDrawer();
+        }
+    }
+    fun drawerDisable(){
+        drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false;
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        toolbar.setNavigationOnClickListener{
+            mainActivity.supportFragmentManager.popBackStack()
+        }
+
     }
 
     private fun createDrawer() {
