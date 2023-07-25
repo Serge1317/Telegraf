@@ -23,4 +23,7 @@
     <!-- phone number fragment -->
     <dimen name="appPadding">10dp</dimen>
 
+<!--    change name fragment-->
+    <dimen name="change_name_fields_margin">16dp</dimen>
+
 </resources>

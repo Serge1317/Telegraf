@@ -15,7 +15,7 @@
     <string name="default_phone_number">380_975_2378</string>
     <string name="settings_change_number">нажмите чтобы изменить номер</string>
     <string name="settings_name">имя пользователя</string>
-    <string name="settings_login">ivanych</string>
+    <string name="settings_login">Ivan</string>
     <string name="settings_default_bio">О себе</string>
     <string name="settings_label_bio">Напишите о себе</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -23,6 +23,7 @@
     <string name="change_name">изменить имя</string>
     <string name="exit">Выход</string>
     <string name="title_activity_register">RegisterActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -31,7 +32,8 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-<!--    strings for register views-->
+
+    <!--    strings for register views-->
     <string name="cd_register_image">cd_register_image</string>
     <string name="enter_register_code">Введите код</string>
     <string name="register_code_we_send">Мы отправили вам SMS с кодом на ваш номер телефона</string>
@@ -39,5 +41,11 @@
     <string name="register_title_your_phone">Ваш телефон</string>
     <string name="enter_your_phone_number">Введите номер телефона</string>
     <string name="register_hint_phone_number">Введите ваш номер телефона</string>
+    <string name="settings_hint_input_name">Имя</string>
+    <string name="settings_hint_input_surname">Фамилия</string>
+
+<!--    change name fragment-->
+    <string name="settings_toast_name_is_empty">Нужно указать имя!</string>
+    <string name="toast_data_update">Сохранено</string>
 
 </resources>
