@@ -77,10 +77,12 @@
             <TextView
                 android:id="@+id/settings_phone_number"
                 style="@style/normalText"
-                tools:text="@string/default_phone_number"
+                android:layout_width="378dp"
+                android:layout_height="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/default_phone_number" />
 
             <TextView
                 android:id="@+id/settings_change_number"
@@ -98,7 +100,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/settings_btn_change_login"
+        android:id="@+id/settings_btn_change_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/settings_btn_change_number_phone"
@@ -130,7 +132,7 @@
         android:id="@+id/settings_btn_change_bio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_btn_change_login"
+        app:layout_constraintTop_toBottomOf="@id/settings_btn_change_username"
         style="@style/settingsButtons">
 
         <TextView

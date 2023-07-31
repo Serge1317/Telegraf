@@ -32,6 +32,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, bundle: Bundle?) {
         addMenu();
         initFields();
+        setListeners();
     }
     private fun initFields(){
         binding.settingsFullname.text = USER.fullname
@@ -40,9 +41,14 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsStatus.text = USER.status;
         binding.settingsUsername.text = USER.username
     }
+    private fun setListeners(){
+        binding.settingsBtnChangeUsername.setOnClickListener{
+            replaceFragment(ChangeUsernameFragment())
+        }
+
+    }
 
     private fun addMenu(){
-
         val menuHost = requireActivity();
         menuHost.addMenuProvider(
             object : MenuProvider {
@@ -62,9 +68,11 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 }
             }, viewLifecycleOwner, Lifecycle.State.RESUMED
         )
+
     }
     override fun onDestroy(){
         super.onDestroy()
         _binding = null;
     }
+
 }

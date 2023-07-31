@@ -10,7 +10,7 @@ import com.example.telegraf.ui.fragments.ChatsFragment
 import com.example.telegraf.ui.objects.AppDrawer
 import com.example.telegraf.utilities.AUTH
 import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.utilities.NODE_USER
+import com.example.telegraf.utilities.NODE_USERS
 import com.example.telegraf.utilities.REF_DATABASE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
@@ -28,18 +28,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater);
         setContentView(binding.root);
-    }
-    override fun onStart(){
-        super.onStart();
         initFields();
         initFunc();
         initUser();
+
     }
+    override fun onStart(){
+        super.onStart();
+//        initFields();
+//        initFunc();
+//        initUser();
+    }
+
     private fun initFields(){
         toolbar = binding.mainToolbar;
         mAppDrawer = AppDrawer(this, toolbar);
         initFirebase()
     }
+
 
     private fun initFunc() {
         if(AUTH.currentUser != null){
@@ -51,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun initUser(){
-        REF_DATABASE_ROOT.child(NODE_USER).child(UID)
+        REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
             .addListenerForSingleValueEvent(AppValueEventListener{
             USER  = it.getValue(User::class.java) ?: User();
         })

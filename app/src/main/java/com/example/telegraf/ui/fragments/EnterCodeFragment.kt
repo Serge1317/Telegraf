@@ -56,7 +56,7 @@ class EnterCodeFragment(val mPhoneNumber: String, val id: String) :
                 dateMap[CHILD_PHONE] = mPhoneNumber
                 dateMap[CHILD_USERNAME] = uid;
 
-                REF_DATABASE_ROOT.child(NODE_USER).child(uid).updateChildren(dateMap)
+                REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dateMap)
                     .addOnCompleteListener { task2 ->
                         if (task2.isSuccessful) {
                             showToast("Добро пожаловать")

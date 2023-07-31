@@ -16,7 +16,7 @@ import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChangeNameBinding
 import com.example.telegraf.utilities.CHILD_FULLNAME
-import com.example.telegraf.utilities.NODE_USER
+import com.example.telegraf.utilities.NODE_USERS
 import com.example.telegraf.utilities.REF_DATABASE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
@@ -28,7 +28,7 @@ class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
     private var _binding: FragmentChangeNameBinding? = null;
     private val binding get() = _binding!!
 
-    private  lateinit var userName: String;
+    private lateinit var userName: String;
     private lateinit var userSurname: String;
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,16 +36,19 @@ class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
 
     }
 
-    override fun onViewCreated(view: View, bundle: Bundle?){
+    override fun onViewCreated(view: View, bundle: Bundle?) {
         addMenu();
         showCurrentUsername();
     }
-    private fun showCurrentUsername(){
+
+    private fun showCurrentUsername() {
         val fullnameList: List<String> = USER.fullname.split(" ");
         binding.settingsInputName.setText(fullnameList[0]);
-        binding.settingsInputSurname.setText(fullnameList[1])
+        if (fullnameList.size > 1)
+            binding.settingsInputSurname.setText(fullnameList[1])
     }
-    private fun addMenu(){
+
+    private fun addMenu() {
         val menuHost: FragmentActivity = requireActivity();
         menuHost.addMenuProvider(
             object : MenuProvider {
@@ -54,7 +57,7 @@ class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when(menuItem.itemId){
+                    when (menuItem.itemId) {
                         R.id.settings_confirm_change -> changeName();
                     }
                     return true;
@@ -66,33 +69,35 @@ class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
     private fun changeName() {
         userName = binding.settingsInputName.text.toString();
         userSurname = binding.settingsInputSurname.text.toString();
-        if(userName.isEmpty()){
+        if (userName.isEmpty()) {
             showToast(getString(R.string.settings_toast_name_is_empty))
-        }else{
+        } else {
             val fullname = "$userName $userSurname"
-            REF_DATABASE_ROOT.child(NODE_USER).child(UID).child(CHILD_FULLNAME)
+            REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_FULLNAME)
                 .setValue(fullname)
-                .addOnCompleteListener{task ->
-                    if(task.isSuccessful){
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         USER.fullname = fullname;
                         showToast(getString(R.string.toast_data_update))
                         parentFragmentManager.popBackStack();
                     }
-            }
+                }
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentChangeNameBinding.inflate(inflater, container, false);
         val view = binding.root;
         return view;
     }
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         super.onDestroy();
         _binding = null;
     }
+
     companion object {
         @JvmStatic
         fun newInstance() = ChangeNameFragment()

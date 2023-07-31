@@ -18,4 +18,5 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         super.onStop()
         (activity as MainActivity).mAppDrawer.drawerEnable();
     }
+
 }

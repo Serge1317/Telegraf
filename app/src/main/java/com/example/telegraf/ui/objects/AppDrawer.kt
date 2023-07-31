@@ -21,24 +21,26 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
     private lateinit var header: AccountHeader;
     private lateinit var drawerLayout: DrawerLayout;
 
-    fun create(){
+    fun create() {
         createHeader();
         createDrawer();
         drawerLayout = drawer.drawerLayout;
     }
-    fun drawerEnable(){
+
+    fun drawerEnable() {
         mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false);
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true;
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toolbar.setNavigationOnClickListener{
+        toolbar.setNavigationOnClickListener {
             drawer.openDrawer();
         }
     }
-    fun drawerDisable(){
+
+    fun drawerDisable() {
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false;
         mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        toolbar.setNavigationOnClickListener{
+        toolbar.setNavigationOnClickListener {
             mainActivity.supportFragmentManager.popBackStack()
         }
 
@@ -98,16 +100,21 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
                     .withName(R.string.help)
                     .withSelectable(false)
                     .withIcon(R.drawable.ic_menu_help)
-            ).withOnDrawerItemClickListener(object: Drawer.OnDrawerItemClickListener{
-                override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*>): Boolean {
+            ).withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
+                override fun onItemClick(
+                    view: View?,
+                    position: Int,
+                    drawerItem: IDrawerItem<*>
+                ): Boolean {
                     //Toast.makeText(applicationContext, position.toString(), Toast.LENGTH_SHORT).show();
-                    when(position){
+                    when (position) {
                         7 -> mainActivity.replaceFragment(SettingsFragment())
                     }
                     return false
                 }
             }).build();
     }
+
     private fun createHeader() {
         header = AccountHeaderBuilder()
             .withActivity(mainActivity)
@@ -115,7 +122,8 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
             .addProfiles(
                 ProfileDrawerItem()
                     .withName("Vasia Ivanov")
-                    .withEmail("theEmail@gmail.com"))
+                    .withEmail("theEmail@gmail.com")
+            )
             .build();
     }
 }
