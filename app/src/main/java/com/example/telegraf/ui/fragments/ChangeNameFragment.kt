@@ -23,7 +23,7 @@ import com.example.telegraf.utilities.USER
 import com.example.telegraf.utilities.showToast
 
 
-class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
+class ChangeNameFragment : BaseChangeFragment(R.layout.fragment_change_name) {
 
     private var _binding: FragmentChangeNameBinding? = null;
     private val binding get() = _binding!!
@@ -37,35 +37,20 @@ class ChangeNameFragment : BaseFragment(R.layout.fragment_change_name) {
     }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
-        addMenu();
-        showCurrentUsername();
+        super.onViewCreated(view, bundle)
+        initFullname();
     }
 
-    private fun showCurrentUsername() {
+    private fun initFullname() {
         val fullnameList: List<String> = USER.fullname.split(" ");
         binding.settingsInputName.setText(fullnameList[0]);
         if (fullnameList.size > 1)
             binding.settingsInputSurname.setText(fullnameList[1])
     }
 
-    private fun addMenu() {
-        val menuHost: FragmentActivity = requireActivity();
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-                    inflater.inflate(R.menu.settings_menu_confirm, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.settings_confirm_change -> changeName();
-                    }
-                    return true;
-                }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED
-        )
+    override fun change() {
+        changeName();
     }
-
     private fun changeName() {
         userName = binding.settingsInputName.text.toString();
         userSurname = binding.settingsInputSurname.text.toString();

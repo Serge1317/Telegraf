@@ -40,10 +40,14 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsBio.text = USER.bio;
         binding.settingsStatus.text = USER.status;
         binding.settingsUsername.text = USER.username
+
     }
     private fun setListeners(){
         binding.settingsBtnChangeUsername.setOnClickListener{
             replaceFragment(ChangeUsernameFragment())
+        }
+        binding.settingsBtnChangeBio.setOnClickListener{
+            replaceFragment(ChangeBioFragment());
         }
 
     }

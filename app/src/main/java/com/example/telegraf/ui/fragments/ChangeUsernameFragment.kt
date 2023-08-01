@@ -25,7 +25,7 @@ import com.example.telegraf.utilities.showToast
 import java.util.Locale
 
 
-class ChangeUsernameFragment : BaseFragment(R.layout.fragment_change_username), MenuProvider {
+class ChangeUsernameFragment : BaseChangeFragment(R.layout.fragment_change_username) {
     private var _binding: FragmentChangeUsernameBinding? = null;
     private val binding get() = _binding!!;
     private var mUserName: String = "";
@@ -43,33 +43,17 @@ class ChangeUsernameFragment : BaseFragment(R.layout.fragment_change_username), 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null;
-        //menuHost.removeMenuProvider(this);
     }
 
-    /**
-     * вынести код создания меню в Funs.kt как функцию разширения
-     */
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.settings_menu_confirm, menu);
-    }
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.settings_confirm_change -> {
-                change()
-                true;
-            }
-            else -> false;
-        }
-    }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
+        super.onViewCreated(view, bundle);
         binding.settingsInputUsername.setText(USER.username)
-        menuHost = this.requireActivity();
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED);
     }
 
-    private fun change() {
+    override fun change() {
+        //super.change();
+
         mUserName = binding.settingsInputUsername.text.toString().lowercase(Locale.ROOT)
         if (mUserName.isEmpty()) {
             showToast(this.getString(R.string.settings_toast_name_is_empty))

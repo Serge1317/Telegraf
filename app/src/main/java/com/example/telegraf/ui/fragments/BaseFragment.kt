@@ -12,7 +12,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).mAppDrawer.drawerDisable();
+       (activity as MainActivity).mAppDrawer.drawerDisable();
     }
     override fun onStop(){
         super.onStop()
