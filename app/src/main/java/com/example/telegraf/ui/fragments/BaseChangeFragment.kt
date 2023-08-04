@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import com.example.telegraf.MainActivity
 import com.example.telegraf.R
+import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.addMenuProvider
 
 open class BaseChangeFragment(layout: Int) : Fragment(layout) {
@@ -20,7 +21,7 @@ open class BaseChangeFragment(layout: Int) : Fragment(layout) {
 
     override fun onStop() {
         super.onStop()
-
+        APP_ACTIVITY.hideKeyboard();
     }
     override fun onViewCreated(view: View, bundle: Bundle?) {
         this.addMenuProvider(R.menu.settings_menu_confirm) {
