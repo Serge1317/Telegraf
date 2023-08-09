@@ -10,19 +10,21 @@ import com.example.telegraf.MainActivity
 import com.example.telegraf.R
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.addMenuProvider
+import com.example.telegraf.utilities.hideKeyboard
 
 open class BaseChangeFragment(layout: Int) : Fragment(layout) {
 
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).mAppDrawer.drawerDisable();
+        APP_ACTIVITY.mAppDrawer.drawerDisable();
+
+    }
+    override fun onStop(){
+        super.onStop()
+        hideKeyboard();
     }
 
-    override fun onStop() {
-        super.onStop()
-        APP_ACTIVITY.hideKeyboard();
-    }
     override fun onViewCreated(view: View, bundle: Bundle?) {
         this.addMenuProvider(R.menu.settings_menu_confirm) {
              when (it) {

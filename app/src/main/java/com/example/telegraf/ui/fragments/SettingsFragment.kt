@@ -21,13 +21,18 @@ import com.example.telegraf.activities.RegisterActivity
 import com.example.telegraf.databinding.FragmentSettingsBinding
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.utilities.CHILD_PHOTO_URL
 import com.example.telegraf.utilities.FOLDER_PROFILE_IMAGE
+import com.example.telegraf.utilities.NODE_USERS
+import com.example.telegraf.utilities.REF_DATABASE_ROOT
 import com.example.telegraf.utilities.REF_STORAGE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
+import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.replaceActivity
 import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.showToast
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 
@@ -56,9 +61,23 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         cropImageLauncher = registerForActivityResult(cropImageContract){uri: Uri? ->
             uri?.let{
                 val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE).child(UID)
-                path.putFile(uri).addOnCompleteListener{task ->
-                    if(task.isSuccessful){
-                        showToast(resources.getString(R.string.toast_data_update))
+                path.putFile(uri).addOnCompleteListener{task1 ->
+                    if(task1.isSuccessful){
+                           path.downloadUrl.addOnCompleteListener{task2 ->
+                               if(task2.isSuccessful){
+                                   val photoUrl = task2.result.toString();
+                                   REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+                                       .child(CHILD_PHOTO_URL)
+                                       .setValue(photoUrl)
+                                       .addOnCompleteListener{task3 ->
+                                           if(task3.isSuccessful){
+                                              USER.photoUrl = photoUrl;
+                                               showToast(resources.getString(R.string.toast_data_update))
+                                               binding.settingsUserPhoto.downloadAndSetImage(photoUrl)
+                                           }
+                                       }
+                               }
+                        }
                     }
                 }
             }
@@ -87,6 +106,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsBio.text = USER.bio;
         binding.settingsStatus.text = USER.status;
         binding.settingsUsername.text = USER.username
+
 
     }
 

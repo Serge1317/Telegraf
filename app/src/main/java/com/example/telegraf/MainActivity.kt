@@ -43,9 +43,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart();
-    }
 
     private fun initFields() {
         toolbar = binding.mainToolbar;
@@ -70,10 +67,10 @@ class MainActivity : AppCompatActivity() {
                 USER = it.getValue(User::class.java) ?: User();
             })
     }
-    fun hideKeyboard(){
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(window.decorView.windowToken, 0);
-    }
+//    fun hideKeyboard(){
+//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(window.decorView.windowToken, 0);
+//    }
 
 
 }
