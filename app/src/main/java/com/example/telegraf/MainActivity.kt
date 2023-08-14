@@ -22,6 +22,7 @@ import com.example.telegraf.utilities.REF_STORAGE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
 import com.example.telegraf.utilities.initFirebase
+import com.example.telegraf.utilities.initUser
 import com.example.telegraf.utilities.replaceActivity
 import com.example.telegraf.utilities.replaceFragment
 
@@ -37,9 +38,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater);
         setContentView(binding.root);
         APP_ACTIVITY = this;
-        initFields();
-        initFunc();
-        initUser();
+
+        initFirebase()
+        initUser {
+            initFields();
+            initFunc();
+        };
 
     }
 
@@ -47,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     private fun initFields() {
         toolbar = binding.mainToolbar;
         mAppDrawer = AppDrawer(this, toolbar);
-        initFirebase()
     }
 
 
@@ -60,17 +63,5 @@ class MainActivity : AppCompatActivity() {
             replaceActivity(RegisterActivity())
         }
     }
-
-    private fun initUser() {
-        REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
-            .addListenerForSingleValueEvent(AppValueEventListener {
-                USER = it.getValue(User::class.java) ?: User();
-            })
-    }
-//    fun hideKeyboard(){
-//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(window.decorView.windowToken, 0);
-//    }
-
 
 }

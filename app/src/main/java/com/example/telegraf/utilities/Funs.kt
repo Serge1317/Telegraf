@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
@@ -70,9 +71,10 @@ fun hideKeyboard(){
     val imm: InputMethodManager = APP_ACTIVITY.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(APP_ACTIVITY.window.decorView.windowToken, 0);
 }
-fun CircleImageView.downloadAndSetImage(url: String){
+fun ImageView.downloadAndSetImage(url: String){
     Picasso.get()
         .load(url)
+        .fit()
         .placeholder(R.drawable.default_photo)
         .into(this)
 }

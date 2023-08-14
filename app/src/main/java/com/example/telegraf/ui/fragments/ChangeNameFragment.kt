@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChangeNameBinding
+import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.CHILD_FULLNAME
 import com.example.telegraf.utilities.NODE_USERS
 import com.example.telegraf.utilities.REF_DATABASE_ROOT
@@ -63,6 +64,7 @@ class ChangeNameFragment : BaseChangeFragment(R.layout.fragment_change_name) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         USER.fullname = fullname;
+                        APP_ACTIVITY.mAppDrawer.updateHeader();
                         showToast(getString(R.string.toast_data_update))
                         parentFragmentManager.popBackStack();
                     }

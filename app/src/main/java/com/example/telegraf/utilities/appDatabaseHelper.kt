@@ -1,5 +1,6 @@
 package com.example.telegraf.utilities
 
+import android.net.Uri
 import com.example.telegraf.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -26,11 +27,49 @@ const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoUrl"
 
 
-
-fun initFirebase(){
+fun initFirebase() {
     AUTH = FirebaseAuth.getInstance();
     REF_DATABASE_ROOT = FirebaseDatabase.getInstance().reference
     USER = User();
     UID = AUTH.currentUser?.uid.toString();
     REF_STORAGE_ROOT = FirebaseStorage.getInstance().reference;
+}
+
+inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
+    path.putFile(uri).addOnSuccessListener {
+        function();
+    }.addOnFailureListener {
+        showToast(it.message.toString())
+    }
+}
+
+inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url: String) -> Unit) {
+    path.downloadUrl.addOnSuccessListener {
+        val url = it.toString();
+        function(url)
+    }.addOnFailureListener {
+        showToast(it.message.toString())
+    }
+}
+
+inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+        .child(CHILD_PHOTO_URL)
+        .setValue(photoUrl)
+        .addOnSuccessListener {
+            function();
+        }.addOnFailureListener {
+            it.message.toString();
+        }
+}
+ inline fun initUser(crossinline function: () -> Unit) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
+        .addListenerForSingleValueEvent(AppValueEventListener {
+            USER = it.getValue(User::class.java) ?: User();
+            if(USER.fullname.isEmpty()){
+                USER.fullname = UID;
+            }
+            function();
+        })
+
 }

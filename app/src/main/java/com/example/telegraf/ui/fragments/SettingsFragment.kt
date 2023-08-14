@@ -29,9 +29,13 @@ import com.example.telegraf.utilities.REF_STORAGE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
 import com.example.telegraf.utilities.downloadAndSetImage
+import com.example.telegraf.utilities.getUrlFromStorage
+import com.example.telegraf.utilities.putImageToStorage
+import com.example.telegraf.utilities.putUrlToDatabase
 import com.example.telegraf.utilities.replaceActivity
 import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.showToast
+import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -56,33 +60,26 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         }
     }
 
-    override fun onCreate(bundle: Bundle?){
+    override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle);
-        cropImageLauncher = registerForActivityResult(cropImageContract){uri: Uri? ->
-            uri?.let{
+        cropImageLauncher = registerForActivityResult(cropImageContract) { uri: Uri? ->
+            uri?.let {
                 val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE).child(UID)
-                path.putFile(uri).addOnCompleteListener{task1 ->
-                    if(task1.isSuccessful){
-                           path.downloadUrl.addOnCompleteListener{task2 ->
-                               if(task2.isSuccessful){
-                                   val photoUrl = task2.result.toString();
-                                   REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
-                                       .child(CHILD_PHOTO_URL)
-                                       .setValue(photoUrl)
-                                       .addOnCompleteListener{task3 ->
-                                           if(task3.isSuccessful){
-                                              USER.photoUrl = photoUrl;
-                                               showToast(resources.getString(R.string.toast_data_update))
-                                               binding.settingsUserPhoto.downloadAndSetImage(photoUrl)
-                                           }
-                                       }
-                               }
+                putImageToStorage(uri, path) {
+                    getUrlFromStorage(path) { photoUrl ->
+                        putUrlToDatabase(photoUrl) {
+                            USER.photoUrl = photoUrl;
+                            showToast(resources.getString(R.string.toast_data_update))
+                            binding.settingsUserPhoto.downloadAndSetImage(photoUrl)
+                            APP_ACTIVITY.mAppDrawer.updateHeader();
                         }
                     }
                 }
             }
         }
     }
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -106,7 +103,8 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsBio.text = USER.bio;
         binding.settingsStatus.text = USER.status;
         binding.settingsUsername.text = USER.username
-
+        // если photoUrl будет иметь пустое значение - будет exception
+        binding.settingsUserPhoto.downloadAndSetImage(USER.photoUrl)
 
     }
 
@@ -127,7 +125,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
     }
 
 
-
     private fun addMenu() {
         val menuHost = requireActivity();
         menuHost.addMenuProvider(
@@ -135,14 +132,12 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
                     inflater.inflate(R.menu.settings_action_menu, menu);
                 }
-
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
                         R.id.settings_menu_exit -> {
                             AUTH.signOut();
                             (activity as MainActivity).replaceActivity(RegisterActivity())
                         }
-
                         R.id.settings_menu_change_name -> replaceFragment(ChangeNameFragment());
                     }
                     return true;
