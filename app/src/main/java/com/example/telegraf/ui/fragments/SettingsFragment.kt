@@ -101,9 +101,8 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsFullname.text = USER.fullname
         binding.settingsPhoneNumber.text = USER.phone;
         binding.settingsBio.text = USER.bio;
-        binding.settingsStatus.text = USER.status;
+        binding.settingsStatus.text = USER.state;
         binding.settingsUsername.text = USER.username
-        // если photoUrl будет иметь пустое значение - будет exception
         binding.settingsUserPhoto.downloadAndSetImage(USER.photoUrl)
 
     }

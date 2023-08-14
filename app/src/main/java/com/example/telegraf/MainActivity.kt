@@ -14,6 +14,7 @@ import com.example.telegraf.ui.fragments.ChatsFragment
 import com.example.telegraf.ui.objects.AppDrawer
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.utilities.AppState
 import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.utilities.FOLDER_PROFILE_IMAGE
 import com.example.telegraf.utilities.NODE_USERS
@@ -62,6 +63,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             replaceActivity(RegisterActivity())
         }
+    }
+    override fun onStart(){
+        super.onStart();
+        AppState.updateState(AppState.ONLINE);
+    }
+    override fun onStop(){
+        super.onStop();
+        AppState.updateState(AppState.OFFLINE)
     }
 
 }
