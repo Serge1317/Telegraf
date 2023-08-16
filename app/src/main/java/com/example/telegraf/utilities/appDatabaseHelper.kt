@@ -1,6 +1,9 @@
 package com.example.telegraf.utilities
 
+import android.annotation.SuppressLint
 import android.net.Uri
+import android.provider.ContactsContract
+import com.example.telegraf.models.CommonModel
 import com.example.telegraf.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -73,4 +76,25 @@ inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) 
             function();
         })
 
+}
+ @SuppressLint("Range")
+ fun initContacts() {
+    if (checkPermission(READ_CONTACTS)) {
+        val contacts = arrayListOf<CommonModel>()
+        val cursor = APP_ACTIVITY.contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+        null, null, null, null
+        )
+        cursor?.let{cursor
+            while(cursor.moveToNext()){
+                val fullname = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val phone = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                val newModel = CommonModel();
+                newModel.fullname = fullname;
+                newModel.phone = phone.replace(Regex("[\\s, -]"), "")
+                contacts.add(newModel)
+            }
+        }
+        cursor?.close();
+    }
 }

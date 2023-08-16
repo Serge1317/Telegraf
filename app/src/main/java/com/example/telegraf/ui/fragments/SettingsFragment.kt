@@ -94,7 +94,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         addMenu();
         initFields();
         setListeners();
-
     }
 
     private fun initFields() {

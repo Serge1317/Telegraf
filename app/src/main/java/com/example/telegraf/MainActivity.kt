@@ -26,11 +26,15 @@ import com.example.telegraf.utilities.REF_STORAGE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.USER
 import com.example.telegraf.utilities.checkPermission
+import com.example.telegraf.utilities.initContacts
 import com.example.telegraf.utilities.initFirebase
 import com.example.telegraf.utilities.initUser
 import com.example.telegraf.utilities.replaceActivity
 import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.showToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,19 +51,14 @@ class MainActivity : AppCompatActivity() {
 
         initFirebase()
         initUser {
-            initContacts();
+            CoroutineScope(Dispatchers.IO).launch{
+                initContacts();
+            }
             initFields();
             initFunc();
         };
 
     }
-
-    private fun initContacts() {
-        if (checkPermission(READ_CONTACTS)) {
-            showToast("Чтение контактов")
-        }
-    }
-
 
     private fun initFields() {
         toolbar = binding.mainToolbar;
@@ -80,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart();
         AppState.updateState(AppState.ONLINE);
+        println("*** current state of the user $USER")
     }
 
     override fun onStop() {
