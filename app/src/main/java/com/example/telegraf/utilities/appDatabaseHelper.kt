@@ -73,6 +73,9 @@ inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) 
             if(USER.fullname.isEmpty()){
                 USER.fullname = UID;
             }
+            if(USER.username.isEmpty()){
+                USER.username = UID;
+            }
             function();
         })
 

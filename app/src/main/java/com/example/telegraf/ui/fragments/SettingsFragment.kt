@@ -21,6 +21,7 @@ import com.example.telegraf.activities.RegisterActivity
 import com.example.telegraf.databinding.FragmentSettingsBinding
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.utilities.AppState
 import com.example.telegraf.utilities.CHILD_PHOTO_URL
 import com.example.telegraf.utilities.FOLDER_PROFILE_IMAGE
 import com.example.telegraf.utilities.NODE_USERS
@@ -133,6 +134,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
                         R.id.settings_menu_exit -> {
+                            AppState.updateState(AppState.OFFLINE)
                             AUTH.signOut();
                             (activity as MainActivity).replaceActivity(RegisterActivity())
                         }

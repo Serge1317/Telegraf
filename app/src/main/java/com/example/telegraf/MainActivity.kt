@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         initFirebase()
         initUser {
-            CoroutineScope(Dispatchers.IO).launch{
+            CoroutineScope(Dispatchers.IO).launch {
                 initContacts();
             }
             initFields();
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         if (AUTH.currentUser != null) {
-            this.setSupportActionBar(toolbar); // сначала setSupport а потом create (иначе не работает бутерброд)
+            this.setSupportActionBar(toolbar);
             mAppDrawer.create();
             replaceFragment(ChatsFragment(), false)
         } else {
@@ -78,13 +78,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart();
-        AppState.updateState(AppState.ONLINE);
-        println("*** current state of the user $USER")
+        if (AUTH.currentUser != null)
+            AppState.updateState(AppState.ONLINE);
+
     }
 
     override fun onStop() {
         super.onStop();
-        AppState.updateState(AppState.OFFLINE)
+        if (AUTH.currentUser != null)
+            AppState.updateState(AppState.OFFLINE)
     }
 
     override fun onRequestPermissionsResult(
