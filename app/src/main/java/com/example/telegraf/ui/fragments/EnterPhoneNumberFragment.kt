@@ -73,6 +73,7 @@ class EnterPhoneNumberFragment : Fragment(R.layout.fragment_enter_phone_number) 
     @SuppressLint("LongLogTag")
     private fun authUser(){
         mPhoneNumber = mBinding.registerInputPhoneNumber.text.toString();
+        mPhoneNumber = mPhoneNumber.replace(Regex("[\\s, -]"), "");
         Log.d(TAG, "mPhoneNumber: $mPhoneNumber")
         val mPhoneNumberOptions = PhoneAuthOptions.newBuilder()
             .setPhoneNumber(mPhoneNumber)
