@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/settingsButtons"
+    android:layout_margin="@dimen/horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/contact_photo"
+        android:layout_width="@dimen/settings_userphoto"
+        android:layout_height="@dimen/settings_userphoto"
+        android:src="@drawable/default_photo"
+        app:civ_border_width="@dimen/settings_userphoto_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/contact_fullname"
+        style="@style/normalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/contact_photo"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Ivanov Ivan Ivanovich" />
+
+    <TextView
+        android:id="@+id/contact_status"
+        style="@style/smallText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/contact_photo"
+        app:layout_constraintTop_toBottomOf="@+id/contact_fullname"
+        tools:text="Online" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

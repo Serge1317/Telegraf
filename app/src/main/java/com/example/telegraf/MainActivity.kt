@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding;
-    private lateinit var toolbar: Toolbar;
+    lateinit var toolbar: Toolbar;
     lateinit var mAppDrawer: AppDrawer;
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,14 +57,12 @@ class MainActivity : AppCompatActivity() {
             initFields();
             initFunc();
         };
-
     }
 
     private fun initFields() {
         toolbar = binding.mainToolbar;
-        mAppDrawer = AppDrawer(this, toolbar);
+        mAppDrawer = AppDrawer();
     }
-
 
     private fun initFunc() {
         if (AUTH.currentUser != null) {
@@ -80,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart();
         if (AUTH.currentUser != null)
             AppState.updateState(AppState.ONLINE);
-
     }
 
     override fun onStop() {

@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegraf.R
+import com.example.telegraf.ui.fragments.ContactsFragment
 import com.example.telegraf.ui.fragments.SettingsFragment
+import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.USER
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.replaceFragment
@@ -23,7 +25,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 
-class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolbar) {
+class AppDrawer {
     private lateinit var drawer: Drawer;
     private lateinit var header: AccountHeader;
     private lateinit var drawerLayout: DrawerLayout;
@@ -37,28 +39,28 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
     }
 
     fun drawerEnable() {
-        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false);
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false);
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true;
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toolbar.setNavigationOnClickListener {
+        APP_ACTIVITY.toolbar.setNavigationOnClickListener {
             drawer.openDrawer();
         }
     }
 
     fun drawerDisable() {
         drawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false;
-        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        toolbar.setNavigationOnClickListener {
-            mainActivity.supportFragmentManager.popBackStack()
+        APP_ACTIVITY.toolbar.setNavigationOnClickListener {
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
         }
 
     }
 
     private fun createDrawer() {
         drawer = DrawerBuilder()
-            .withActivity(mainActivity)
-            .withToolbar(toolbar)
+            .withActivity(APP_ACTIVITY)
+            .withToolbar(APP_ACTIVITY.toolbar)
             .withActionBarDrawerToggle(true)
             .withSelectedItem(-1)
             .withAccountHeader(header)
@@ -115,13 +117,23 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    //Toast.makeText(applicationContext, position.toString(), Toast.LENGTH_SHORT).show();
-                    when (position) {
-                        7 -> mainActivity.replaceFragment(SettingsFragment())
-                    }
-                    return false
+                    return clickOnItem(position);
                 }
             }).build();
+    }
+
+    private fun clickOnItem(position: Int): Boolean {
+        return when (position) {
+            4 -> {
+                APP_ACTIVITY.replaceFragment(ContactsFragment());
+                true;
+            }
+            7 -> {
+                APP_ACTIVITY.replaceFragment(SettingsFragment())
+                true;
+            }
+            else -> false
+        }
     }
 
     private fun createHeader() {
@@ -131,7 +143,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
             .withIcon(USER.photoUrl)
             .withIdentifier(101)
         header = AccountHeaderBuilder()
-            .withActivity(mainActivity)
+            .withActivity(APP_ACTIVITY)
             .withHeaderBackground(R.drawable.header)
             .addProfiles(
                 currentProfile
@@ -146,9 +158,10 @@ class AppDrawer(val mainActivity: AppCompatActivity, private val toolbar: Toolba
 
         header.updateProfile(currentProfile)
     }
-    private fun initLoader(){
-        DrawerImageLoader.init(object : AbstractDrawerImageLoader(){
-            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable){
+
+    private fun initLoader() {
+        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
+            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable) {
                 imageView.downloadAndSetImage(uri.toString())
             }
         })
