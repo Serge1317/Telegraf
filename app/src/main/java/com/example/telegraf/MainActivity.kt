@@ -1,8 +1,5 @@
 package com.example.telegraf
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,15 +14,7 @@ import com.example.telegraf.ui.objects.AppDrawer
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AUTH
 import com.example.telegraf.utilities.AppState
-import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.utilities.FOLDER_PROFILE_IMAGE
-import com.example.telegraf.utilities.NODE_USERS
 import com.example.telegraf.utilities.READ_CONTACTS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.REF_STORAGE_ROOT
-import com.example.telegraf.utilities.UID
-import com.example.telegraf.utilities.USER
-import com.example.telegraf.utilities.checkPermission
 import com.example.telegraf.utilities.initContacts
 import com.example.telegraf.utilities.initFirebase
 import com.example.telegraf.utilities.initUser
@@ -97,6 +86,5 @@ class MainActivity : AppCompatActivity() {
         ) {
             initContacts()
         }
-
     }
 }

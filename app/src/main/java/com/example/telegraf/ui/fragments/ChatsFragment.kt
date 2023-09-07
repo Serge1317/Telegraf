@@ -10,4 +10,7 @@ class ChatsFragment : Fragment(R.layout.fragment_chats) {
         super.onResume()
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
 }
