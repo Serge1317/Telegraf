@@ -1,7 +1,9 @@
 package com.example.telegraf.utilities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.provider.ContactsContract
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,6 +17,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
+import com.example.telegraf.models.CommonModel
 import com.squareup.picasso.Picasso
 
 fun showToast(message: String) {
@@ -74,4 +77,26 @@ fun ImageView.downloadAndSetImage(url: String){
         .fit()
         .placeholder(R.drawable.default_photo)
         .into(this)
+}
+@SuppressLint("Range")
+fun initContacts() {
+    if (checkPermission(READ_CONTACTS)) {
+        val contacts = arrayListOf<CommonModel>()
+        val cursor = APP_ACTIVITY.contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            null, null, null, null
+        )
+        cursor?.let{cursor
+            while(cursor.moveToNext()){
+                val fullName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val phone = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                val newModel = CommonModel();
+                newModel.fullname = fullName;
+                newModel.phone = phone.replace(Regex("[\\s, -]"), "")
+                contacts.add(newModel)
+            }
+        }
+        updatePhonesToDatabase(contacts);
+        cursor?.close();
+    }
 }

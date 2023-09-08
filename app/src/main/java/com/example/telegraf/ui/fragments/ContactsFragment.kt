@@ -61,12 +61,16 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                     .inflate(R.layout.contact_item, parent, false);
                 return ContactHolder(view)
             }
-
+            // model is representing phone_contacts elements
             override fun onBindViewHolder(holder: ContactHolder, position: Int, model: CommonModel) {
                 refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
                 refUsersListener = AppValueEventListener {
                     val contact = it.getCommonModel();
-                    holder.name.text = contact.fullname;
+                    if(contact.fullname.isEmpty()){
+                        holder.name.text = model.fullname;
+                    }else{
+                        holder.name.text = contact.fullname;
+                    }
                     holder.status.text = contact.state;
                     holder.image.downloadAndSetImage(contact.photoUrl);
                     holder.itemView.setOnClickListener{
@@ -79,7 +83,6 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
         }
         recycler.adapter = adapter;
         adapter.startListening();
-
     }
 
     override fun onStop() {

@@ -20,7 +20,7 @@ import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.getUserModel
 import com.google.firebase.database.DatabaseReference
 
-class SingleChatFragment(private val contact: CommonModel) :
+class SingleChatFragment(private val model: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
 
     private var _binding: FragmentSingleChatBinding? = null
@@ -48,13 +48,16 @@ class SingleChatFragment(private val contact: CommonModel) :
             initToolbarInfo()
 
         }
-        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
+        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
         refDatabase.addValueEventListener(toolbarInfoListener)
     }
 
     private fun initToolbarInfo() {
         val fullName = toolbarInfo.findViewById<TextView>(R.id.chat_contact_fullname)
-        fullName.text = receiveUser.fullname;
+        if (receiveUser.fullname.isEmpty())
+            fullName.text = model.fullname;
+        else
+            fullName.text = receiveUser.fullname
 
         val status = toolbarInfo.findViewById<TextView>(R.id.chat_contact_status)
         status.text = receiveUser.state;

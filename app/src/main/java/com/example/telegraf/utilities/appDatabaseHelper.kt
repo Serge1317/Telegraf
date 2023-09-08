@@ -83,29 +83,7 @@ inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) 
         })
 
 }
- @SuppressLint("Range")
- fun initContacts() {
-    if (checkPermission(READ_CONTACTS)) {
-        val contacts = arrayListOf<CommonModel>()
-        val cursor = APP_ACTIVITY.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-        null, null, null, null
-        )
-        cursor?.let{cursor
-            while(cursor.moveToNext()){
-                val fullname = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val phone = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val newModel = CommonModel();
-                newModel.fullname = fullname;
-                newModel.phone = phone.replace(Regex("[\\s, -]"), "")
-                contacts.add(newModel)
-            }
-        }
-        println(contacts.toString())
-        updatePhonesToDatabase(contacts);
-        cursor?.close();
-    }
-}
+
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>){
     REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener{
         it.children.forEach{snapshot ->
@@ -115,9 +93,13 @@ fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>){
                         .child(snapshot.value.toString())
                         .child(CHILD_ID)
                         .setValue(snapshot.value.toString())
-                        .addOnFailureListener{e ->
-                            e.message.toString()
-                        }
+                        .addOnFailureListener{e -> e.message.toString() }
+
+                    REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(UID)
+                        .child(snapshot.value.toString())
+                        .child(CHILD_FULLNAME)
+                        .setValue(contact.fullname)
+                        .addOnFailureListener{e -> e.message.toString() }
                 }
             }
         }
