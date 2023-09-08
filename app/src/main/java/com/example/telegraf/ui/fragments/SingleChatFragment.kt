@@ -5,15 +5,30 @@ import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.findFragment
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentSingleChatBinding
 import com.example.telegraf.models.CommonModel
+import com.example.telegraf.models.User
 import com.example.telegraf.utilities.APP_ACTIVITY
+import com.example.telegraf.utilities.AppValueEventListener
+import com.example.telegraf.utilities.NODE_USERS
+import com.example.telegraf.utilities.REF_DATABASE_ROOT
+import com.example.telegraf.utilities.downloadAndSetImage
+import com.example.telegraf.utilities.getUserModel
+import com.google.firebase.database.DatabaseReference
 
-class SingleChatFragment (private val model: CommonModel) : BaseFragment(R.layout.fragment_single_chat) {
+class SingleChatFragment(private val contact: CommonModel) :
+    BaseFragment(R.layout.fragment_single_chat) {
+
     private var _binding: FragmentSingleChatBinding? = null
     private val binding get() = _binding!!;
+    private lateinit var toolbarInfo: View;
+    private lateinit var toolbarInfoListener: AppValueEventListener;
+    private lateinit var receiveUser: User;
+    private lateinit var refDatabase: DatabaseReference;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +41,32 @@ class SingleChatFragment (private val model: CommonModel) : BaseFragment(R.layou
 
     override fun onResume() {
         super.onResume()
-        APP_ACTIVITY.toolbar.findViewById<View>(R.id.toolbar_info).visibility = View.VISIBLE;
+        toolbarInfo = APP_ACTIVITY.toolbar.findViewById<View>(R.id.toolbar_info);
+        toolbarInfo.visibility = View.VISIBLE;
+        toolbarInfoListener = AppValueEventListener {
+            receiveUser = it.getUserModel()
+            initToolbarInfo()
+
+        }
+        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
+        refDatabase.addValueEventListener(toolbarInfoListener)
+    }
+
+    private fun initToolbarInfo() {
+        val fullName = toolbarInfo.findViewById<TextView>(R.id.chat_contact_fullname)
+        fullName.text = receiveUser.fullname;
+
+        val status = toolbarInfo.findViewById<TextView>(R.id.chat_contact_status)
+        status.text = receiveUser.state;
+
+        val photo = toolbarInfo.findViewById<ImageView>(R.id.chat_toolbar_photo)
+        photo.downloadAndSetImage(receiveUser.photoUrl)
     }
 
     override fun onPause() {
         super.onPause()
-        APP_ACTIVITY.toolbar.findViewById<View>(R.id.toolbar_info).visibility = View.GONE;
+        toolbarInfo.visibility = View.GONE;
+        refDatabase.removeEventListener(toolbarInfoListener)
     }
 
     override fun onDestroy() {
