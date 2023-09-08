@@ -15,10 +15,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
-import com.example.telegraf.activities.RegisterActivity
-import com.example.telegraf.ui.fragments.ChatsFragment
 import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 
 fun showToast(message: String) {
     Toast.makeText(APP_ACTIVITY, message, Toast.LENGTH_SHORT).show();
@@ -34,13 +31,13 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, addToStack: Boolean = 
     if (addToStack) {
         this.supportFragmentManager
             .beginTransaction()
-            .replace(R.id.dataContainer, fragment)
+            .replace(R.id.data_container, fragment)
             .addToBackStack(null)
             .commit();
     } else {
         this.supportFragmentManager
             .beginTransaction()
-            .replace(R.id.dataContainer, fragment)
+            .replace(R.id.data_container, fragment)
             .commit();
     }
 }
@@ -48,7 +45,7 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, addToStack: Boolean = 
 fun Fragment.replaceFragment(fragment: Fragment) {
     this.parentFragmentManager
         .beginTransaction()
-        .replace(R.id.dataContainer, fragment)
+        .replace(R.id.data_container, fragment)
         .addToBackStack(null)
         .commit();
 }

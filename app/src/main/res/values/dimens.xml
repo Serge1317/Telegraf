@@ -23,7 +23,13 @@
     <!-- phone number fragment -->
     <dimen name="appPadding">10dp</dimen>
 
+
+<!--    toolbar -->
+    <dimen name="toolbar_image_width">45dp</dimen>
+    <dimen name="toolbar_image_height">45dp</dimen>
+
 <!--    change name fragment-->
     <dimen name="change_name_fields_margin">16dp</dimen>
+
 
 </resources>

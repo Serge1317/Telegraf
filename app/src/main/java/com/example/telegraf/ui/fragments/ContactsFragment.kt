@@ -1,7 +1,6 @@
 package com.example.telegraf.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,7 @@ import com.example.telegraf.utilities.REF_DATABASE_ROOT
 import com.example.telegraf.utilities.UID
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.getCommonModel
+import com.example.telegraf.utilities.replaceFragment
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseReference
@@ -69,6 +69,9 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                     holder.name.text = contact.fullname;
                     holder.status.text = contact.state;
                     holder.image.downloadAndSetImage(contact.photoUrl);
+                    holder.itemView.setOnClickListener{
+                        replaceFragment(SingleChatFragment(model));
+                    }
                 }
                 refUsers.addValueEventListener(refUsersListener)
                 mapListeners[refUsers] = refUsersListener;
@@ -85,6 +88,11 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
         mapListeners.forEach{map ->
             map.key.removeEventListener(map.value);
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null;
     }
 
     class ContactHolder(view: View) : RecyclerView.ViewHolder(view) {

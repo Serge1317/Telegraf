@@ -10,6 +10,11 @@
     <color name="primary">#0088CC</color>
     <color name="primaryVariant">#0052CC</color>
     <color name="colorGrey">#AFB1BA</color>
+    <color name="green_light">#A7CC97</color>
+    <color name="blue_light">#6C95EA</color>
+    <color name="blue_dark">#022367</color>
+    <color name="grey_light">#CCCCCC</color>
+
     <!-- Material DEFAULT colors -->
     <color name="material_drawer_primary">#2196F3</color>
     <color name="material_drawer_primary_dark">#1976D2</color>

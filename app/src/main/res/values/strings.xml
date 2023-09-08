@@ -50,5 +50,6 @@
     <string name="settings_hint_input_username">ваш username (login)</string>
     <string name="toast_user_exist">Такой пользователь уже существует</string>
     <string name="settings_hint_input_bio">Напишите о себе</string>
+    <string name="message">Сообщение</string>
 
 </resources>
