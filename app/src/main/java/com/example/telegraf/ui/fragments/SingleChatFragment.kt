@@ -16,8 +16,11 @@ import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.utilities.NODE_USERS
 import com.example.telegraf.utilities.REF_DATABASE_ROOT
+import com.example.telegraf.utilities.TYPE_TEXT
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.getUserModel
+import com.example.telegraf.utilities.sendMessage
+import com.example.telegraf.utilities.showToast
 import com.google.firebase.database.DatabaseReference
 
 class SingleChatFragment(private val model: CommonModel) :
@@ -50,7 +53,20 @@ class SingleChatFragment(private val model: CommonModel) :
         }
         refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
         refDatabase.addValueEventListener(toolbarInfoListener)
+        binding.chatBtnSendMessage.setOnClickListener{
+            val message: String = binding.chatInputMessage.text.toString();
+            if(message.isEmpty()){
+                showToast(getString(R.string.enter_message))
+            }else{
+                sendMessage(message, model.id, TYPE_TEXT){
+                    binding.chatInputMessage.setText("");
+                }
+            }
+
+        }
     }
+
+
 
     private fun initToolbarInfo() {
         val fullName = toolbarInfo.findViewById<TextView>(R.id.chat_contact_fullname)

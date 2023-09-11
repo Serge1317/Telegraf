@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -18,11 +19,13 @@ lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var USER: User;
 lateinit var UID: String;
 lateinit var REF_STORAGE_ROOT: StorageReference;
+const val TYPE_TEXT = "text"
 
 const val NODE_USERS = "users"
 const val NODE_USERNAMES = "usernames"
 const val NODE_PHONES = "phones"
 const val NODE_PHONE_CONTACTS = "phone_contacts"
+const val NODE_MESSAGES = "messages"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
 const val CHILD_ID = "id"
@@ -32,6 +35,10 @@ const val CHILD_FULLNAME = "fullname"
 const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoUrl"
 const val CHILD_STATE = "state"
+const val CHILD_TEXT = "text"
+const val CHILD_TYPE = "type"
+const val CHILD_FROM = "from"
+const val CHILD_TIMESTAMP = "timeStamp"
 
 
 fun initFirebase() {
@@ -69,14 +76,15 @@ inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) 
             it.message.toString();
         }
 }
- inline fun initUser(crossinline function: () -> Unit) {
+
+inline fun initUser(crossinline function: () -> Unit) {
     REF_DATABASE_ROOT.child(NODE_USERS).child(UID)
         .addListenerForSingleValueEvent(AppValueEventListener {
             USER = it.getValue(User::class.java) ?: User();
-            if(USER.fullname.isEmpty()){
+            if (USER.fullname.isEmpty()) {
                 USER.fullname = UID;
             }
-            if(USER.username.isEmpty()){
+            if (USER.username.isEmpty()) {
                 USER.username = UID;
             }
             function();
@@ -84,29 +92,59 @@ inline fun putUrlToDatabase(photoUrl: String, crossinline function: () -> Unit) 
 
 }
 
-fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>){
-    REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener{
-        it.children.forEach{snapshot ->
-            arrayContacts.forEach{contact ->
-                if(snapshot.key == contact.phone){
+fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
+    REF_DATABASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener {
+        it.children.forEach { snapshot ->
+            arrayContacts.forEach { contact ->
+                if (snapshot.key == contact.phone) {
                     REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(UID)
                         .child(snapshot.value.toString())
                         .child(CHILD_ID)
                         .setValue(snapshot.value.toString())
-                        .addOnFailureListener{e -> e.message.toString() }
+                        .addOnFailureListener { e -> e.message.toString() }
 
                     REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(UID)
                         .child(snapshot.value.toString())
                         .child(CHILD_FULLNAME)
                         .setValue(contact.fullname)
-                        .addOnFailureListener{e -> e.message.toString() }
+                        .addOnFailureListener { e -> e.message.toString() }
                 }
             }
         }
     })
 }
+
 fun DataSnapshot.getCommonModel(): CommonModel =
     this.getValue(CommonModel::class.java) ?: CommonModel();
 
 fun DataSnapshot.getUserModel(): User =
     this.getValue(User::class.java) ?: User();
+
+fun sendMessage(
+    message: String,
+    receivingUserId: String,
+    typeText: String,
+    clearInputField: () -> Unit
+) {
+    val refDialogUser = "$NODE_MESSAGES/$UID/$receivingUserId";
+    val refDialogReceiveUser = "$NODE_MESSAGES/$receivingUserId/$UID";
+    val messageKey: String? = REF_DATABASE_ROOT.child(refDialogUser).push().key;
+
+    val messageMap = hashMapOf<String, Any>();
+    messageMap[CHILD_FROM] = UID;
+    messageMap[CHILD_TEXT] = message;
+    messageMap[CHILD_TYPE] = typeText;
+    messageMap[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP;
+
+    val dialogMap = hashMapOf<String, Any>();
+    dialogMap["$refDialogUser/$messageKey"] = messageMap;
+    dialogMap["$refDialogReceiveUser/$messageKey"] = messageMap;
+
+    REF_DATABASE_ROOT.updateChildren(dialogMap)
+        .addOnSuccessListener {
+            clearInputField()
+        }
+        .addOnFailureListener{
+            it.message.toString()
+        }
+}
