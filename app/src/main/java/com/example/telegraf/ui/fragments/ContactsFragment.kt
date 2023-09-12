@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentContactsBinding
 import com.example.telegraf.models.CommonModel
+import com.example.telegraf.ui.fragments.single_chat.SingleChatFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.utilities.NODE_PHONE_CONTACTS
