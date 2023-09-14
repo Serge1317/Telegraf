@@ -1,26 +1,20 @@
 package com.example.telegraf.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
-import com.example.telegraf.databinding.FragmentChangeNameBinding
 import com.example.telegraf.databinding.FragmentChangeUsernameBinding
 import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.utilities.CHILD_USERNAME
-import com.example.telegraf.utilities.NODE_USERNAMES
-import com.example.telegraf.utilities.NODE_USERS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.UID
-import com.example.telegraf.utilities.USER
+import com.example.telegraf.database.CHILD_USERNAME
+import com.example.telegraf.database.NODE_USERNAMES
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.UID
+import com.example.telegraf.database.USER
+import com.example.telegraf.database.changeUsername
 import com.example.telegraf.utilities.showToast
 import java.util.Locale
 
@@ -52,8 +46,6 @@ class ChangeUsernameFragment : BaseChangeFragment(R.layout.fragment_change_usern
     }
 
     override fun change() {
-        //super.change();
-
         mUserName = binding.settingsInputUsername.text.toString().lowercase(Locale.ROOT)
         if (mUserName.isEmpty()) {
             showToast(this.getString(R.string.settings_toast_name_is_empty))
@@ -63,43 +55,9 @@ class ChangeUsernameFragment : BaseChangeFragment(R.layout.fragment_change_usern
                     if (it.hasChild(mUserName)) {
                         showToast(getString(R.string.toast_user_exist))
                     } else {
-                        changeUsername();
+                        changeUsername(mUserName);
                     }
                 })
         }
-    }
-
-    private fun changeUsername() {
-        REF_DATABASE_ROOT.child(NODE_USERNAMES).child(mUserName).setValue(UID)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    updateCurrentUsername()
-                }
-            }
-    }
-
-    private fun updateCurrentUsername() {
-        REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_USERNAME).setValue(mUserName)
-            .addOnCompleteListener() {
-                if (it.isSuccessful) {
-                    showToast(resources.getString(R.string.toast_data_update))
-                    deleteOldUsername()
-                } else {
-                    showToast(it.exception?.message.toString())
-                }
-            }
-    }
-
-    private fun deleteOldUsername() {
-        REF_DATABASE_ROOT.child(NODE_USERNAMES).child(USER.username).removeValue()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    showToast(resources.getString(R.string.toast_data_update))
-                    USER.username = mUserName;
-                    parentFragmentManager.popBackStack();
-                } else {
-                    showToast(it.exception?.message.toString())
-                }
-            }
     }
 }

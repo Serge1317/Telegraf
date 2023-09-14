@@ -1,20 +1,19 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.fragments.register
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.example.telegraf.MainActivity
 import com.example.telegraf.R
-import com.example.telegraf.activities.RegisterActivity
+import com.example.telegraf.database.AUTH
+import com.example.telegraf.database.CHILD_ID
+import com.example.telegraf.database.CHILD_PHONE
+import com.example.telegraf.database.NODE_PHONES
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
 import com.example.telegraf.databinding.FragmentEnterCodeBinding
 import com.example.telegraf.utilities.*
-import com.google.firebase.auth.EmailAuthProvider.getCredential
-import com.google.firebase.auth.FirebaseAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider
 
 
@@ -36,7 +35,7 @@ class EnterCodeFragment(val mPhoneNumber: String, val id: String) :
 
     override fun onStart() {
         super.onStart();
-        (activity as RegisterActivity).title = mPhoneNumber;
+        APP_ACTIVITY.title = mPhoneNumber;
         binding.registerInputCode.addTextChangedListener(AppTextWatcher {
             val code: String = binding.registerInputCode.text.toString();
             if (code.length == 6) {
@@ -63,7 +62,7 @@ class EnterCodeFragment(val mPhoneNumber: String, val id: String) :
                     REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dateMap)
                         .addOnSuccessListener {
                             showToast("Добро пожаловать")
-                            (activity as RegisterActivity).replaceActivity(MainActivity())
+                            restartActivity()
                         }.addOnFailureListener{
                             showToast(it.message.toString())
                         }

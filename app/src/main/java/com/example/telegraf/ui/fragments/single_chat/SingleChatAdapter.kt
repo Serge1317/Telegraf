@@ -8,11 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegraf.R
 import com.example.telegraf.models.CommonModel
-import com.example.telegraf.utilities.UID
+import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.asTime
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class SingleChatAdapter(): RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
 

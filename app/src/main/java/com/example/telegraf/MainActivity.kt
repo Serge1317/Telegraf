@@ -3,24 +3,22 @@ package com.example.telegraf
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.telegraf.activities.RegisterActivity
+
 import com.example.telegraf.databinding.ActivityMainBinding
-import com.example.telegraf.models.User
-import com.example.telegraf.ui.fragments.ChatsFragment
+import com.example.telegraf.ui.fragments.MainFragment
+import com.example.telegraf.ui.fragments.register.EnterPhoneNumberFragment
 import com.example.telegraf.ui.objects.AppDrawer
 import com.example.telegraf.utilities.APP_ACTIVITY
-import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.database.AUTH
 import com.example.telegraf.utilities.AppState
 import com.example.telegraf.utilities.READ_CONTACTS
 import com.example.telegraf.utilities.initContacts
-import com.example.telegraf.utilities.initFirebase
-import com.example.telegraf.utilities.initUser
-import com.example.telegraf.utilities.replaceActivity
+import com.example.telegraf.database.initFirebase
+import com.example.telegraf.database.initUser
+
 import com.example.telegraf.utilities.replaceFragment
-import com.example.telegraf.utilities.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         APP_ACTIVITY = this;
 
         initFirebase()
+
         initUser {
             CoroutineScope(Dispatchers.IO).launch {
                 initContacts();
@@ -54,12 +53,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
+        setSupportActionBar(toolbar);
         if (AUTH.currentUser != null) {
-            this.setSupportActionBar(toolbar);
             mAppDrawer.create();
-            replaceFragment(ChatsFragment(), false)
+            replaceFragment(MainFragment(), false)
         } else {
-            replaceActivity(RegisterActivity())
+            replaceFragment(EnterPhoneNumberFragment(), false);
         }
     }
 

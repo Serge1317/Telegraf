@@ -14,20 +14,19 @@ import com.example.telegraf.models.User
 import com.example.telegraf.ui.fragments.BaseFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.utilities.NODE_MESSAGES
-import com.example.telegraf.utilities.NODE_USERS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.TYPE_TEXT
-import com.example.telegraf.utilities.UID
+import com.example.telegraf.database.NODE_MESSAGES
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.TYPE_TEXT
+import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.downloadAndSetImage
-import com.example.telegraf.utilities.getCommonModel
-import com.example.telegraf.utilities.getUserModel
-import com.example.telegraf.utilities.sendMessage
+import com.example.telegraf.database.getCommonModel
+import com.example.telegraf.database.getUserModel
+import com.example.telegraf.database.sendMessage
 import com.example.telegraf.utilities.showToast
 import com.google.firebase.database.DatabaseReference
-import io.reactivex.rxjava3.core.Single
 
-class SingleChatFragment(private val model: CommonModel) :
+class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
 
     private var _binding: FragmentSingleChatBinding? = null
@@ -47,7 +46,6 @@ class SingleChatFragment(private val model: CommonModel) :
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentSingleChatBinding.inflate(layoutInflater, container, false);
         return binding.root;
     }
@@ -61,7 +59,7 @@ class SingleChatFragment(private val model: CommonModel) :
             if(message.isEmpty()){
                 showToast(getString(R.string.enter_message))
             }else{
-                sendMessage(message, model.id, TYPE_TEXT){
+                sendMessage(message, contact.id, TYPE_TEXT){
                     binding.chatInputMessage.setText("");
                 }
             }
@@ -76,7 +74,7 @@ class SingleChatFragment(private val model: CommonModel) :
 
         refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES)
             .child(UID)
-            .child(model.id)
+            .child(contact.id)
         chatListener = AppValueEventListener { dataSnapshot ->
             chatList = dataSnapshot.children.map{it.getCommonModel()}
             chatAdapter.setList(chatList)
@@ -92,14 +90,14 @@ class SingleChatFragment(private val model: CommonModel) :
             receiveUser = it.getUserModel()
             initToolbarInfo()
         }
-        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
+        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
         refDatabase.addValueEventListener(toolbarInfoListener)
     }
 
     private fun initToolbarInfo() {
         val fullName = toolbarInfo.findViewById<TextView>(R.id.chat_contact_fullname)
         if (receiveUser.fullname.isEmpty())
-            fullName.text = model.fullname;
+            fullName.text = contact.fullname;
         else
             fullName.text = receiveUser.fullname
 

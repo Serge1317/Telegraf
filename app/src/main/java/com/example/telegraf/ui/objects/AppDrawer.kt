@@ -4,14 +4,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegraf.R
 import com.example.telegraf.ui.fragments.ContactsFragment
 import com.example.telegraf.ui.fragments.SettingsFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
-import com.example.telegraf.utilities.USER
+import com.example.telegraf.database.USER
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.replaceFragment
 import com.mikepenz.materialdrawer.AccountHeader
@@ -125,11 +123,11 @@ class AppDrawer {
     private fun clickOnItem(position: Int): Boolean {
         return when (position) {
             4 -> {
-                APP_ACTIVITY.replaceFragment(ContactsFragment());
+                replaceFragment(ContactsFragment());
                 true;
             }
             7 -> {
-                APP_ACTIVITY.replaceFragment(SettingsFragment())
+                replaceFragment(SettingsFragment())
                 true;
             }
             else -> false

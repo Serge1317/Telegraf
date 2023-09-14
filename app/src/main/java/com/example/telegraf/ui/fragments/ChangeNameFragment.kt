@@ -1,26 +1,18 @@
 package com.example.telegraf.ui.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChangeNameBinding
 import com.example.telegraf.utilities.APP_ACTIVITY
-import com.example.telegraf.utilities.CHILD_FULLNAME
-import com.example.telegraf.utilities.NODE_USERS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.UID
-import com.example.telegraf.utilities.USER
+import com.example.telegraf.database.CHILD_FULLNAME
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.UID
+import com.example.telegraf.database.USER
+import com.example.telegraf.database.changeNameToDatabase
 import com.example.telegraf.utilities.showToast
 
 
@@ -31,11 +23,6 @@ class ChangeNameFragment : BaseChangeFragment(R.layout.fragment_change_name) {
 
     private lateinit var userName: String;
     private lateinit var userSurname: String;
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
@@ -59,16 +46,7 @@ class ChangeNameFragment : BaseChangeFragment(R.layout.fragment_change_name) {
             showToast(getString(R.string.settings_toast_name_is_empty))
         } else {
             val fullname = "$userName $userSurname"
-            REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_FULLNAME)
-                .setValue(fullname)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        USER.fullname = fullname;
-                        APP_ACTIVITY.mAppDrawer.updateHeader();
-                        showToast(getString(R.string.toast_data_update))
-                        parentFragmentManager.popBackStack();
-                    }
-                }
+            changeNameToDatabase(fullname)
         }
     }
 

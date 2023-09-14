@@ -15,29 +15,22 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import com.example.telegraf.MainActivity
 import com.example.telegraf.R
-import com.example.telegraf.activities.RegisterActivity
 import com.example.telegraf.databinding.FragmentSettingsBinding
 import com.example.telegraf.utilities.APP_ACTIVITY
-import com.example.telegraf.utilities.AUTH
+import com.example.telegraf.database.AUTH
 import com.example.telegraf.utilities.AppState
-import com.example.telegraf.utilities.CHILD_PHOTO_URL
-import com.example.telegraf.utilities.FOLDER_PROFILE_IMAGE
-import com.example.telegraf.utilities.NODE_USERS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.REF_STORAGE_ROOT
-import com.example.telegraf.utilities.UID
-import com.example.telegraf.utilities.USER
+import com.example.telegraf.database.FOLDER_PROFILE_IMAGE
+import com.example.telegraf.database.REF_STORAGE_ROOT
+import com.example.telegraf.database.UID
+import com.example.telegraf.database.USER
 import com.example.telegraf.utilities.downloadAndSetImage
-import com.example.telegraf.utilities.getUrlFromStorage
-import com.example.telegraf.utilities.putImageToStorage
-import com.example.telegraf.utilities.putUrlToDatabase
-import com.example.telegraf.utilities.replaceActivity
+import com.example.telegraf.database.getUrlFromStorage
+import com.example.telegraf.database.putImageToStorage
+import com.example.telegraf.database.putUrlToDatabase
 import com.example.telegraf.utilities.replaceFragment
+import com.example.telegraf.utilities.restartActivity
 import com.example.telegraf.utilities.showToast
-import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 
@@ -136,7 +129,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                         R.id.settings_menu_exit -> {
                             AppState.updateState(AppState.OFFLINE)
                             AUTH.signOut();
-                            (activity as MainActivity).replaceActivity(RegisterActivity())
+                            restartActivity()
                         }
                         R.id.settings_menu_change_name -> replaceFragment(ChangeNameFragment());
                     }

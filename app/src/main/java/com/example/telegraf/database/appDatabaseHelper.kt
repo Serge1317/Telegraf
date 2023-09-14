@@ -1,10 +1,12 @@
-package com.example.telegraf.utilities
+package com.example.telegraf.database
 
-import android.annotation.SuppressLint
 import android.net.Uri
-import android.provider.ContactsContract
+import com.example.telegraf.R
 import com.example.telegraf.models.CommonModel
 import com.example.telegraf.models.User
+import com.example.telegraf.utilities.APP_ACTIVITY
+import com.example.telegraf.utilities.AppValueEventListener
+import com.example.telegraf.utilities.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
@@ -146,5 +148,63 @@ fun sendMessage(
         }
         .addOnFailureListener{
             it.message.toString()
+        }
+}
+ fun changeUsername(newUserName: String) {
+    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(newUserName).setValue(UID)
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                updateCurrentUsername(newUserName)
+            }
+        }
+}
+
+private fun updateCurrentUsername(newUserName: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_USERNAME).setValue(newUserName)
+        .addOnCompleteListener() {
+            if (it.isSuccessful) {
+                showToast(APP_ACTIVITY.resources.getString(R.string.toast_data_update))
+                deleteOldUsername(newUserName)
+            } else {
+                showToast(it.exception?.message.toString())
+            }
+        }
+}
+
+private fun deleteOldUsername(newUserName: String) {
+    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(USER.username).removeValue()
+        .addOnSuccessListener {
+                showToast(APP_ACTIVITY.resources.getString(R.string.toast_data_update))
+                USER.username = newUserName;
+                //parentFragmentManager.popBackStack();
+                APP_ACTIVITY.supportFragmentManager.popBackStack()
+        }.addOnFailureListener{
+            it.message.toString();
+        }
+}
+
+fun changeBioToDatabase(newBio: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_BIO).setValue(newBio)
+        .addOnSuccessListener{
+                showToast(APP_ACTIVITY.resources.getString(R.string.toast_data_update));
+                USER.bio = newBio;
+                //this.parentFragmentManager.popBackStack();
+                APP_ACTIVITY.supportFragmentManager.popBackStack()
+        }.addOnFailureListener{
+            it.message.toString();
+        }
+}
+
+fun changeNameToDatabase(fullname: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(UID).child(CHILD_FULLNAME)
+        .setValue(fullname)
+        .addOnSuccessListener {
+                USER.fullname = fullname;
+                APP_ACTIVITY.mAppDrawer.updateHeader();
+                showToast(APP_ACTIVITY.getString(R.string.toast_data_update))
+                //parentFragmentManager.popBackStack();
+                APP_ACTIVITY.supportFragmentManager.popBackStack()
+        }.addOnFailureListener{
+            it.message.toString();
         }
 }

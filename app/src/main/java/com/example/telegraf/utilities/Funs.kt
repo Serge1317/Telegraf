@@ -11,12 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.MenuRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import com.example.telegraf.MainActivity
 import com.example.telegraf.R
+import com.example.telegraf.database.updatePhonesToDatabase
 import com.example.telegraf.models.CommonModel
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
@@ -27,33 +28,25 @@ fun showToast(message: String) {
     Toast.makeText(APP_ACTIVITY, message, Toast.LENGTH_SHORT).show();
 }
 
-fun AppCompatActivity.replaceActivity(activity: AppCompatActivity) {
-    val intent = Intent(this, activity::class.java)
-    this.startActivity(intent);
-    this.finish() // чтобы активити из которого вызвалась эта функция было завершено, а не висело в стеке
+fun restartActivity() {
+    val intent = Intent(APP_ACTIVITY, MainActivity::class.java)
+    APP_ACTIVITY.startActivity(intent);
+    APP_ACTIVITY.finish()
 }
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, addToStack: Boolean = true) {
+fun replaceFragment(fragment: Fragment, addToStack: Boolean = true) {
     if (addToStack) {
-        this.supportFragmentManager
+        APP_ACTIVITY.supportFragmentManager
             .beginTransaction()
             .replace(R.id.data_container, fragment)
             .addToBackStack(null)
             .commit();
     } else {
-        this.supportFragmentManager
+        APP_ACTIVITY.supportFragmentManager
             .beginTransaction()
             .replace(R.id.data_container, fragment)
             .commit();
     }
-}
-
-fun Fragment.replaceFragment(fragment: Fragment) {
-    this.parentFragmentManager
-        .beginTransaction()
-        .replace(R.id.data_container, fragment)
-        .addToBackStack(null)
-        .commit();
 }
 
 fun Fragment.addMenuProvider(@MenuRes menuRes: Int, callback: (id: Int) -> Boolean) {

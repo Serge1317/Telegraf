@@ -1,5 +1,11 @@
 package com.example.telegraf.utilities
 
+import com.example.telegraf.database.CHILD_STATE
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.UID
+import com.example.telegraf.database.USER
+
 enum class AppState(val state: String) {
     ONLINE("в сети"),
     OFFLINE("был недавно"),

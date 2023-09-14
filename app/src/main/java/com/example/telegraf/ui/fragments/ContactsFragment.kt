@@ -12,12 +12,12 @@ import com.example.telegraf.models.CommonModel
 import com.example.telegraf.ui.fragments.single_chat.SingleChatFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.utilities.NODE_PHONE_CONTACTS
-import com.example.telegraf.utilities.NODE_USERS
-import com.example.telegraf.utilities.REF_DATABASE_ROOT
-import com.example.telegraf.utilities.UID
+import com.example.telegraf.database.NODE_PHONE_CONTACTS
+import com.example.telegraf.database.NODE_USERS
+import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.downloadAndSetImage
-import com.example.telegraf.utilities.getCommonModel
+import com.example.telegraf.database.getCommonModel
 import com.example.telegraf.utilities.replaceFragment
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -63,19 +63,19 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
                 return ContactHolder(view)
             }
             // model is representing phone_contacts elements
-            override fun onBindViewHolder(holder: ContactHolder, position: Int, model: CommonModel) {
-                refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(model.id)
+            override fun onBindViewHolder(holder: ContactHolder, position: Int, contact: CommonModel) {
+                refUsers = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
                 refUsersListener = AppValueEventListener {
-                    val contact = it.getCommonModel();
-                    if(contact.fullname.isEmpty()){
-                        holder.name.text = model.fullname;
-                    }else{
+                    val model = it.getCommonModel();
+                    if(model.fullname.isEmpty()){
                         holder.name.text = contact.fullname;
+                    }else{
+                        holder.name.text = model.fullname;
                     }
-                    holder.status.text = contact.state;
-                    holder.image.downloadAndSetImage(contact.photoUrl);
+                    holder.status.text = model.state;
+                    holder.image.downloadAndSetImage(model.photoUrl);
                     holder.itemView.setOnClickListener{
-                        replaceFragment(SingleChatFragment(model));
+                        replaceFragment(SingleChatFragment(contact));
                     }
                 }
                 refUsers.addValueEventListener(refUsersListener)

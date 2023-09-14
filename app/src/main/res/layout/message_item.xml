@@ -7,9 +7,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/block_user_message"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8"
         android:layout_marginEnd="@dimen/horizontal_margin_small"
         android:layout_marginTop="@dimen/horizontal_margin_small"
         android:background="@drawable/background_user_message"
@@ -18,22 +19,25 @@
 
         <TextView
             android:id="@+id/chat_user_message"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Hello, it's me!"
-            android:textColor="@color/black"
-            android:gravity="end"
+            android:gravity="start"
             android:padding="@dimen/appPadding"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Hello, it's me!" />
+
         <TextView
             android:id="@+id/chat_user_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="9:30"
             android:textColor="@color/black"
+            android:textSize="11sp"
             android:gravity="end"
             android:layout_marginEnd="@dimen/horizontal_margin_small"
+            android:layout_marginStart="@dimen/horizontal_margin_small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chat_user_message"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -41,9 +45,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/block_receive_message"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="100dp"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8"
         android:layout_marginStart="@dimen/horizontal_margin_small"
         android:layout_marginTop="@dimen/horizontal_margin_small"
         android:background="@drawable/background_receive_message"
@@ -52,21 +57,24 @@
 
         <TextView
             android:id="@+id/chat_receive_message"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Hello, it's me!"
             android:textColor="@color/black"
             android:gravity="start"
             android:padding="@dimen/appPadding"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/chat_receive_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="9:30"
+            android:textSize="11sp"
             android:textColor="@color/black"
             android:gravity="start"
+            android:layout_marginEnd="@dimen/horizontal_margin_small"
             android:layout_marginStart="@dimen/horizontal_margin_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chat_receive_message"/>
