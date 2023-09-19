@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentSingleChatBinding
@@ -23,8 +24,11 @@ import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getCommonModel
 import com.example.telegraf.database.getUserModel
 import com.example.telegraf.database.sendMessage
+import com.example.telegraf.utilities.AppChildEventListener
 import com.example.telegraf.utilities.showToast
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DatabaseReference
+import java.util.LinkedList
 
 class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
@@ -37,37 +41,42 @@ class SingleChatFragment(private val contact: CommonModel) :
     private lateinit var refDatabase: DatabaseReference;
     private lateinit var chatRecycler: RecyclerView;
     private lateinit var chatAdapter: SingleChatAdapter;
-    private lateinit var chatListener: AppValueEventListener;
+    private lateinit var chatListener: ChildEventListener;
     private lateinit var refMessages: DatabaseReference;
-    private var chatList: List<CommonModel> = emptyList();
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         _binding = FragmentSingleChatBinding.inflate(layoutInflater, container, false);
         return binding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
     override fun onResume() {
         super.onResume()
         initToolbar()
         initRecycler()
-        binding.chatBtnSendMessage.setOnClickListener{
+        binding.chatBtnSendMessage.setOnClickListener {
             val message: String = binding.chatInputMessage.text.toString();
-            if(message.isEmpty()){
+            if (message.isEmpty()) {
                 showToast(getString(R.string.enter_message))
-            }else{
-                sendMessage(message, contact.id, TYPE_TEXT){
+            } else {
+                sendMessage(message, contact.id, TYPE_TEXT) {
                     binding.chatInputMessage.setText("");
                 }
             }
-
         }
     }
 
-    private fun initRecycler(){
+    private fun initRecycler() {
+
         chatRecycler = binding.singleChatRecycler;
         chatAdapter = SingleChatAdapter();
         chatRecycler.adapter = chatAdapter;
@@ -75,12 +84,14 @@ class SingleChatFragment(private val contact: CommonModel) :
         refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES)
             .child(UID)
             .child(contact.id)
-        chatListener = AppValueEventListener { dataSnapshot ->
-            chatList = dataSnapshot.children.map{it.getCommonModel()}
-            chatAdapter.setList(chatList)
-            chatRecycler.smoothScrollToPosition(chatAdapter.itemCount);
+        chatListener = AppChildEventListener {
+//            val model = it.getCommonModel()
+//            chatList.add(model);
+//            chatAdapter.setList(chatList)
+            chatAdapter.addItem(it.getCommonModel())
+            chatRecycler.smoothScrollToPosition(chatAdapter.itemCount)
         }
-        refMessages.addValueEventListener(chatListener);
+        refMessages.addChildEventListener(chatListener);
     }
 
     private fun initToolbar() {
@@ -90,7 +101,9 @@ class SingleChatFragment(private val contact: CommonModel) :
             receiveUser = it.getUserModel()
             initToolbarInfo()
         }
-        refDatabase = REF_DATABASE_ROOT.child(NODE_USERS).child(contact.id)
+        refDatabase = REF_DATABASE_ROOT
+            .child(NODE_USERS)
+            .child(contact.id)
         refDatabase.addValueEventListener(toolbarInfoListener)
     }
 
