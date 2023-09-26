@@ -134,6 +134,7 @@ fun sendMessage(
 
     val messageMap = hashMapOf<String, Any>();
     messageMap[CHILD_FROM] = UID;
+    messageMap[CHILD_ID] = messageKey.toString();
     messageMap[CHILD_TEXT] = message;
     messageMap[CHILD_TYPE] = typeText;
     messageMap[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP;
@@ -176,7 +177,6 @@ private fun deleteOldUsername(newUserName: String) {
         .addOnSuccessListener {
                 showToast(APP_ACTIVITY.resources.getString(R.string.toast_data_update))
                 USER.username = newUserName;
-                //parentFragmentManager.popBackStack();
                 APP_ACTIVITY.supportFragmentManager.popBackStack()
         }.addOnFailureListener{
             it.message.toString();
@@ -188,7 +188,6 @@ fun changeBioToDatabase(newBio: String) {
         .addOnSuccessListener{
                 showToast(APP_ACTIVITY.resources.getString(R.string.toast_data_update));
                 USER.bio = newBio;
-                //this.parentFragmentManager.popBackStack();
                 APP_ACTIVITY.supportFragmentManager.popBackStack()
         }.addOnFailureListener{
             it.message.toString();
@@ -202,7 +201,6 @@ fun changeNameToDatabase(fullname: String) {
                 USER.fullname = fullname;
                 APP_ACTIVITY.mAppDrawer.updateHeader();
                 showToast(APP_ACTIVITY.getString(R.string.toast_data_update))
-                //parentFragmentManager.popBackStack();
                 APP_ACTIVITY.supportFragmentManager.popBackStack()
         }.addOnFailureListener{
             it.message.toString();

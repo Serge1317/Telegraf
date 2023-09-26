@@ -1,5 +1,6 @@
 package com.example.telegraf.ui.fragments.single_chat
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,51 +13,52 @@ import com.example.telegraf.models.CommonModel
 import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.DiffUtilCallback
 import com.example.telegraf.utilities.asTime
+import java.util.concurrent.ConcurrentLinkedDeque
 
-class SingleChatAdapter(): RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
+class SingleChatAdapter() : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
 
-    private var cacheList: List<CommonModel> = listOf();
-    private lateinit var diffResult: DiffUtil.DiffResult;
+    private var cacheList = mutableListOf<CommonModel>();
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleChatHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleChatHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.message_item, parent, false);
         return SingleChatHolder(view);
     }
-    override fun getItemCount(): Int{
+
+    override fun getItemCount(): Int {
         return cacheList.size;
     }
 
-    override fun onBindViewHolder(holder: SingleChatHolder, position: Int){
-        if(cacheList[position].from == UID){
+    override fun onBindViewHolder(holder: SingleChatHolder, position: Int) {
+        if (cacheList[position].from == UID) {
             holder.blockUserMessage.visibility = View.VISIBLE;
             holder.blockReceivedMessage.visibility = View.GONE;
             holder.chatUserMessage.text = cacheList[position].text;
             holder.chatUserMessageTime.text = cacheList[position].timeStamp.toString().asTime()
-        }else{
+        } else {
             holder.blockUserMessage.visibility = View.GONE;
             holder.blockReceivedMessage.visibility = View.VISIBLE;
             holder.chatReceivedMessage.text = cacheList[position].text;
             holder.chatReceivedMessageTime.text = cacheList[position].timeStamp.toString().asTime()
         }
     }
-
-//fun setList(chatList: List<CommonModel>){
-//    diffResult = DiffUtil.calculateDiff(DiffUtilCallback(cacheList, chatList))
-//    diffResult.dispatchUpdatesTo(this);
-//    cacheList = chatList;
-//}
-
-    fun addItem(item: CommonModel){
-        val newList = mutableListOf<CommonModel>()
-        newList.addAll(cacheList)
-        newList.add(item)
-        diffResult = DiffUtil.calculateDiff(DiffUtilCallback(cacheList, newList))
-        diffResult.dispatchUpdatesTo(this);
-        cacheList = newList;
+    fun addItemToBottom(item: CommonModel, onSuccess: () -> Unit){
+        if ( ! cacheList.contains(item)) {
+            cacheList.add(item);
+            this.notifyItemInserted(cacheList.size)
+        }
+        onSuccess()
+    }
+    fun addItemToTop(item: CommonModel, onSuccess: () -> Unit){
+        if ( ! cacheList.contains(item)) {
+            cacheList.add(item);
+            cacheList.sortBy { it.timeStamp.toString() }
+            this.notifyItemInserted(0)
+        }
+        onSuccess();
     }
 
-    class SingleChatHolder(val view: View): RecyclerView.ViewHolder(view){
+    class SingleChatHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val blockUserMessage = view.findViewById<ConstraintLayout>(R.id.block_user_message);
         val chatUserMessage = view.findViewById<TextView>(R.id.chat_user_message);
         val chatUserMessageTime = view.findViewById<TextView>(R.id.chat_user_time);
