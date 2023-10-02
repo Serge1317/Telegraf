@@ -21,7 +21,8 @@ lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var USER: User;
 lateinit var UID: String;
 lateinit var REF_STORAGE_ROOT: StorageReference;
-const val TYPE_TEXT = "text"
+const val TYPE_MESSAGE_TEXT = "text"
+const val TYPE_MESSAGE_IMAGE = "image"
 
 const val NODE_USERS = "users"
 const val NODE_USERNAMES = "usernames"
@@ -30,6 +31,7 @@ const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
+const val FOLDER_MESSAGE_IMAGE = "image_message"
 const val CHILD_ID = "id"
 const val CHILD_PHONE = "phone"
 const val CHILD_USERNAME = "username"
@@ -38,9 +40,12 @@ const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoUrl"
 const val CHILD_STATE = "state"
 const val CHILD_TEXT = "text"
+
 const val CHILD_TYPE = "type"
 const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timeStamp"
+
+const val CHILD_IMAGE_URL = "imageUrl"
 
 
 fun initFirebase() {
@@ -150,6 +155,26 @@ fun sendMessage(
         .addOnFailureListener{
             it.message.toString()
         }
+}
+fun sendMessageAsImage(receivingUserId: String, imageUrl: String, messageKey: String) {
+    val refDialogUser = "$NODE_MESSAGES/$UID/$receivingUserId"
+    val refDialogReceiving = "$NODE_MESSAGES/$receivingUserId/$UID"
+
+    val messageMap = hashMapOf<String, Any>();
+    messageMap[CHILD_FROM] = UID;
+    messageMap[CHILD_ID] = messageKey;
+    messageMap[CHILD_TYPE] = TYPE_MESSAGE_IMAGE;
+    messageMap[CHILD_IMAGE_URL] = imageUrl;
+    messageMap[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
+
+    val dialogMap = hashMapOf<String, Any>()
+    dialogMap["$refDialogUser/$messageKey"] = messageMap;
+    dialogMap["$refDialogReceiving/$messageKey"] = messageMap;
+
+    REF_DATABASE_ROOT.updateChildren(dialogMap)
+        .addOnFailureListener{
+        it.message.toString()
+    }
 }
  fun changeUsername(newUserName: String) {
     REF_DATABASE_ROOT.child(NODE_USERNAMES).child(newUserName).setValue(UID)
