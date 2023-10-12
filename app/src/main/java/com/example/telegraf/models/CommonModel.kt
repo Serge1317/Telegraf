@@ -14,7 +14,7 @@ data class CommonModel(
     var from: String = "",
     var timeStamp: Any = "",
 
-    var imageUrl: String = ""
+    var fileUrl: String = "empty"
 ) {
     override fun equals(other: Any?): Boolean {
         return (other as CommonModel).id == this.id;

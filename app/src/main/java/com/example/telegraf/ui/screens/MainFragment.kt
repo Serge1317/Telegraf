@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
 import androidx.fragment.app.Fragment
 import com.example.telegraf.R

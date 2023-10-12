@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentContactsBinding
 import com.example.telegraf.models.CommonModel
-import com.example.telegraf.ui.fragments.single_chat.SingleChatFragment
+import com.example.telegraf.ui.screens.single_chat.SingleChatFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.database.NODE_PHONE_CONTACTS

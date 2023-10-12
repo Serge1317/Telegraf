@@ -1,10 +1,12 @@
-package com.example.telegraf.ui.fragments.single_chat
+package com.example.telegraf.ui.screens.single_chat
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
@@ -16,32 +18,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.telegraf.R
-import com.example.telegraf.database.FOLDER_MESSAGE_IMAGE
 import com.example.telegraf.databinding.FragmentSingleChatBinding
 import com.example.telegraf.models.CommonModel
 import com.example.telegraf.models.User
-import com.example.telegraf.ui.fragments.BaseFragment
+import com.example.telegraf.ui.screens.BaseFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.database.NODE_MESSAGES
 import com.example.telegraf.database.NODE_USERS
 import com.example.telegraf.database.REF_DATABASE_ROOT
-import com.example.telegraf.database.REF_STORAGE_ROOT
+import com.example.telegraf.database.TYPE_MESSAGE_IMAGE
 import com.example.telegraf.database.TYPE_MESSAGE_TEXT
+import com.example.telegraf.database.TYPE_MESSAGE_VOICE
 import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getCommonModel
-import com.example.telegraf.database.getUrlFromStorage
+import com.example.telegraf.database.getMessageKey
 import com.example.telegraf.database.getUserModel
-import com.example.telegraf.database.putImageToStorage
-import com.example.telegraf.database.putUrlToDatabase
 import com.example.telegraf.database.sendMessage
-import com.example.telegraf.database.sendMessageAsImage
+import com.example.telegraf.database.uploadFileToStorage
+import com.example.telegraf.ui.message_recycler_view.views.AppViewFactory
 import com.example.telegraf.utilities.AppChildEventListener
 import com.example.telegraf.utilities.AppTextWatcher
+import com.example.telegraf.utilities.AppVoiceRecorder
+import com.example.telegraf.utilities.RECORD_AUDIO
+import com.example.telegraf.utilities.checkPermission
 import com.example.telegraf.utilities.showToast
 import com.google.firebase.database.DatabaseReference
 import com.theartofdev.edmodo.cropper.CropImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class SingleChatFragment(private val contact: CommonModel) :
@@ -65,6 +72,9 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var doSmoothScroll: Boolean = true;
     private lateinit var swipeLayout: SwipeRefreshLayout;
 
+    private var isRecording: Boolean = false;
+    private lateinit var voiceRecorder: AppVoiceRecorder;
+
     private lateinit var imageLauncher: ActivityResultLauncher<Any?>;
     private val imageContract = object: ActivityResultContract<Any?, Uri?>(){
         override fun createIntent(context: Context, input: Any?): Intent{
@@ -83,26 +93,17 @@ class SingleChatFragment(private val contact: CommonModel) :
 
         imageLauncher = registerForActivityResult(imageContract){uri: Uri? ->
             uri?.let{
-                val messageKey = REF_DATABASE_ROOT
-                    .child(NODE_MESSAGES)
-                    .child(UID)
-                    .child(contact.id)
-                    .push().key.toString();
-
-                val path = REF_STORAGE_ROOT
-                    .child(FOLDER_MESSAGE_IMAGE)
-                    .child(messageKey);
-                putImageToStorage(uri, path){
-                    getUrlFromStorage(path){url: String ->
-                        sendMessageAsImage(contact.id, url, messageKey)
-                        doSmoothScroll = true;
-                    }
-                }
+                val messageKey = getMessageKey(contact.id)
+                uploadFileToStorage(
+                    uri,
+                    messageKey,
+                    contact.id,
+                    TYPE_MESSAGE_IMAGE
+                )
+                doSmoothScroll = true;
             }
         }
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,9 +116,10 @@ class SingleChatFragment(private val contact: CommonModel) :
     private fun initFields() {
         swipeLayout = binding.chatSwipeRefresh;
         chatLayoutManager = LinearLayoutManager(this.context);
-
+        voiceRecorder = AppVoiceRecorder();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
         initFields();
@@ -136,11 +138,13 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
         binding.chatInputMessage.addTextChangedListener(AppTextWatcher(){
            val message = binding.chatInputMessage.text.toString();
-            if(message.isEmpty()){
+            if(message.isEmpty() or isRecording){
                 binding.chatBtnAttach.visibility = View.VISIBLE;
+                binding.chatBtnVoice.visibility = View.VISIBLE;
                 binding.chatBtnSendMessage.visibility = View.GONE
             }else{
                 binding.chatBtnAttach.visibility = View.GONE;
+                binding.chatBtnVoice.visibility = View.GONE
                 binding.chatBtnSendMessage.visibility = View.VISIBLE;
             }
         })
@@ -148,8 +152,35 @@ class SingleChatFragment(private val contact: CommonModel) :
         binding.chatBtnAttach.setOnClickListener{
             attachFile()
         }
-
+       CoroutineScope(Dispatchers.IO).launch{
+            binding.chatBtnVoice.setOnTouchListener { view, event: MotionEvent ->
+                if (checkPermission(RECORD_AUDIO)) {
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        isRecording = true;
+                        val messageKey = getMessageKey(contact.id);
+                        voiceRecorder.startRecord(messageKey);
+                        binding.chatInputMessage.setText("Запись...")
+                        binding.chatBtnVoice.setColorFilter(R.color.primary);
+                    } else if (event.action == MotionEvent.ACTION_UP) {
+                        isRecording = false;
+                        voiceRecorder.stopRecord { file, messageKey ->
+                            uploadFileToStorage(
+                                Uri.fromFile(file),
+                                messageKey,
+                                contact.id,
+                                TYPE_MESSAGE_VOICE
+                            )
+                            doSmoothScroll = true;
+                        }
+                        binding.chatInputMessage.setText("")
+                        binding.chatBtnVoice.colorFilter = null;
+                    }
+                }
+                true;
+            }
+        }
     }
+
     private fun attachFile(){
         imageLauncher.launch(null);
     }
@@ -169,11 +200,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         chatListener = AppChildEventListener {
             val message = it.getCommonModel();
             if (doSmoothScroll) {
-                chatAdapter.addItemToBottom(message) {
+                chatAdapter.addItemToBottom(AppViewFactory.getView(message)) {
                     chatRecycler.smoothScrollToPosition(chatAdapter.itemCount);
                 }
             } else {
-                chatAdapter.addItemToTop(message) {
+                chatAdapter.addItemToTop(AppViewFactory.getView(message)) {
                     swipeLayout.isRefreshing = false;
                 }
             }
@@ -247,6 +278,12 @@ class SingleChatFragment(private val contact: CommonModel) :
         toolbarInfo.visibility = View.GONE;
         refDatabase.removeEventListener(toolbarInfoListener)
         refMessages.removeEventListener(chatListener);
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        voiceRecorder.releaseRecorder();
+        chatAdapter.destroy()
     }
 
     override fun onDestroy() {

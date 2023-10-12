@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,13 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChangeBioBinding
-import com.example.telegraf.database.CHILD_BIO
-import com.example.telegraf.database.NODE_USERS
-import com.example.telegraf.database.REF_DATABASE_ROOT
-import com.example.telegraf.database.UID
 import com.example.telegraf.database.USER
 import com.example.telegraf.database.changeBioToDatabase
-import com.example.telegraf.utilities.showToast
 
 
 class ChangeBioFragment : BaseChangeFragment(R.layout.fragment_change_bio) {

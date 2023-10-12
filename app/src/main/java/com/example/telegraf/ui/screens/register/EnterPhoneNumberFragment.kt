@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments.register
+package com.example.telegraf.ui.screens.register
 
 import android.annotation.SuppressLint
 import android.os.Bundle

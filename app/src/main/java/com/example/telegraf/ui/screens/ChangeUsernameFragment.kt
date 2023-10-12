@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +8,8 @@ import androidx.fragment.app.FragmentActivity
 import com.example.telegraf.R
 import com.example.telegraf.databinding.FragmentChangeUsernameBinding
 import com.example.telegraf.utilities.AppValueEventListener
-import com.example.telegraf.database.CHILD_USERNAME
 import com.example.telegraf.database.NODE_USERNAMES
-import com.example.telegraf.database.NODE_USERS
 import com.example.telegraf.database.REF_DATABASE_ROOT
-import com.example.telegraf.database.UID
 import com.example.telegraf.database.USER
 import com.example.telegraf.database.changeUsername
 import com.example.telegraf.utilities.showToast

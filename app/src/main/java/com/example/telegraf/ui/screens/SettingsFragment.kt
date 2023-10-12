@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
 
 import android.content.Context
@@ -26,7 +26,7 @@ import com.example.telegraf.database.UID
 import com.example.telegraf.database.USER
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getUrlFromStorage
-import com.example.telegraf.database.putImageToStorage
+import com.example.telegraf.database.putFileToStorage
 import com.example.telegraf.database.putUrlToDatabase
 import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.restartActivity
@@ -59,7 +59,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         cropImageLauncher = registerForActivityResult(cropImageContract) { uri: Uri? ->
             uri?.let {
                 val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE).child(UID)
-                putImageToStorage(uri, path) {
+                putFileToStorage(uri, path) {
                     getUrlFromStorage(path) { photoUrl ->
                         putUrlToDatabase(photoUrl) {
                             USER.photoUrl = photoUrl;

@@ -1,13 +1,7 @@
-package com.example.telegraf.ui.fragments
+package com.example.telegraf.ui.screens
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.telegraf.MainActivity
 import com.example.telegraf.utilities.APP_ACTIVITY
-import com.example.telegraf.utilities.AppState
 
 
 open class BaseFragment(layout: Int) : Fragment(layout) {
