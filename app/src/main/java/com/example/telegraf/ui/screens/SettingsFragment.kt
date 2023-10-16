@@ -73,7 +73,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -116,7 +115,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         cropImageLauncher.launch(null);
     }
 
-
     private fun addMenu() {
         val menuHost = requireActivity();
         menuHost.addMenuProvider(
@@ -137,7 +135,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 }
             }, viewLifecycleOwner, Lifecycle.State.RESUMED
         )
-
     }
 
     override fun onDestroy() {

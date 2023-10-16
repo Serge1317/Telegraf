@@ -14,6 +14,7 @@ lateinit var REF_STORAGE_ROOT: StorageReference;
 const val TYPE_MESSAGE_TEXT = "text"
 const val TYPE_MESSAGE_IMAGE = "image"
 const val TYPE_MESSAGE_VOICE = "voice"
+const val TYPE_MESSAGE_FILE = "file"
 
 const val NODE_USERS = "users"
 const val NODE_USERNAMES = "usernames"

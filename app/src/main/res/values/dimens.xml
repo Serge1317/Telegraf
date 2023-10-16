@@ -32,6 +32,11 @@
     <dimen name="change_name_fields_margin">16dp</dimen>
     <dimen name="message_btn_play_width">50dp</dimen>
     <dimen name="message_btn_play_height">50dp</dimen>
+    <dimen name="bottom_sheet_height">70dp</dimen>
+
+<!--    bottom sheet -->
+    <dimen name="bottom_sheet_btn_margin">6dp</dimen>
+    <dimen name="message_filename_margin">4dp</dimen>
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -14,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,6 +29,7 @@ import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.database.NODE_MESSAGES
 import com.example.telegraf.database.NODE_USERS
 import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.TYPE_MESSAGE_FILE
 import com.example.telegraf.database.TYPE_MESSAGE_IMAGE
 import com.example.telegraf.database.TYPE_MESSAGE_TEXT
 import com.example.telegraf.database.TYPE_MESSAGE_VOICE
@@ -43,7 +46,9 @@ import com.example.telegraf.utilities.AppTextWatcher
 import com.example.telegraf.utilities.AppVoiceRecorder
 import com.example.telegraf.utilities.RECORD_AUDIO
 import com.example.telegraf.utilities.checkPermission
+import com.example.telegraf.utilities.getFilenameFromUri
 import com.example.telegraf.utilities.showToast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DatabaseReference
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.coroutines.CoroutineScope
@@ -74,8 +79,10 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     private var isRecording: Boolean = false;
     private lateinit var voiceRecorder: AppVoiceRecorder;
+    private lateinit var bottomSheet: BottomSheetBehavior<*>;
 
     private lateinit var imageLauncher: ActivityResultLauncher<Any?>;
+    private lateinit var fileLauncher: ActivityResultLauncher<String>
     private val imageContract = object: ActivityResultContract<Any?, Uri?>(){
         override fun createIntent(context: Context, input: Any?): Intent{
             return CropImage.activity()
@@ -103,6 +110,20 @@ class SingleChatFragment(private val contact: CommonModel) :
                 doSmoothScroll = true;
             }
         }
+        fileLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri: Uri? ->
+            uri?.let{
+                val messageKey = getMessageKey(contact.id)
+                val filename = getFilenameFromUri(uri)
+                uploadFileToStorage(
+                    uri,
+                    messageKey,
+                    contact.id,
+                    TYPE_MESSAGE_FILE,
+                    filename
+                )
+                doSmoothScroll = true;
+            }
+        }
     }
 
     override fun onCreateView(
@@ -117,6 +138,8 @@ class SingleChatFragment(private val contact: CommonModel) :
         swipeLayout = binding.chatSwipeRefresh;
         chatLayoutManager = LinearLayoutManager(this.context);
         voiceRecorder = AppVoiceRecorder();
+        bottomSheet = BottomSheetBehavior.from(binding.bottomSheetChoice.bottomSheetChoiceLayout)
+        bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -150,7 +173,7 @@ class SingleChatFragment(private val contact: CommonModel) :
         })
 
         binding.chatBtnAttach.setOnClickListener{
-            attachFile()
+            attach()
         }
        CoroutineScope(Dispatchers.IO).launch{
             binding.chatBtnVoice.setOnTouchListener { view, event: MotionEvent ->
@@ -181,8 +204,15 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
     }
 
-    private fun attachFile(){
-        imageLauncher.launch(null);
+    private fun attach(){
+        bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+
+        binding.bottomSheetChoice.btnAttachFile.setOnClickListener{
+            fileLauncher.launch("*/*")
+        }
+        binding.bottomSheetChoice.btnAttachImage.setOnClickListener{
+            imageLauncher.launch(null);
+        }
     }
 
     private fun initRecycler() {
