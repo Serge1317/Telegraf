@@ -7,7 +7,7 @@ import android.widget.ImageView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegraf.R
 import com.example.telegraf.ui.screens.ContactsFragment
-import com.example.telegraf.ui.screens.SettingsFragment
+import com.example.telegraf.ui.screens.settings.SettingsFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.database.USER
 import com.example.telegraf.utilities.downloadAndSetImage

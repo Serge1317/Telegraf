@@ -4,19 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.MainFragment">
+    tools:context=".ui.screens.chat_list.ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="this is a chatFragment"
-        android:layout_gravity="center"
-        android:background="@color/teal_200"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="40sp"
-        app:fontFamily="sans-serif" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_dark"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/chat_item" />
 
 </FrameLayout>

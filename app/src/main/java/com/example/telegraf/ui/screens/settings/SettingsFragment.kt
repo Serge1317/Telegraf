@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.screens
+package com.example.telegraf.ui.screens.settings
 
 
 import android.content.Context
@@ -28,6 +28,7 @@ import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getUrlFromStorage
 import com.example.telegraf.database.putFileToStorage
 import com.example.telegraf.database.putUrlToDatabase
+import com.example.telegraf.ui.screens.BaseFragment
 import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.restartActivity
 import com.example.telegraf.utilities.showToast

@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 
 import com.example.telegraf.databinding.ActivityMainBinding
-import com.example.telegraf.ui.screens.MainFragment
+import com.example.telegraf.ui.screens.chat_list.ChatsFragment
 import com.example.telegraf.ui.screens.register.EnterPhoneNumberFragment
 import com.example.telegraf.ui.objects.AppDrawer
 import com.example.telegraf.utilities.APP_ACTIVITY
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar);
         if (AUTH.currentUser != null) {
             mAppDrawer.create();
-            replaceFragment(MainFragment(), false)
+            replaceFragment(ChatsFragment(), false)
         } else {
             replaceFragment(EnterPhoneNumberFragment(), false);
         }

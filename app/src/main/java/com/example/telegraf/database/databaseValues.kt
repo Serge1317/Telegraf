@@ -16,11 +16,16 @@ const val TYPE_MESSAGE_IMAGE = "image"
 const val TYPE_MESSAGE_VOICE = "voice"
 const val TYPE_MESSAGE_FILE = "file"
 
+const val TYPE_CHAT = "chat"
+const val TYPE_GROUP = "group"
+const val TYPE_CHANNEL = "channel"
+
 const val NODE_USERS = "users"
 const val NODE_USERNAMES = "usernames"
 const val NODE_PHONES = "phones"
 const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
+const val NODE_MAIN_LIST = "main_list"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
 const val FOLDER_FILE_MESSAGE = "file_message"

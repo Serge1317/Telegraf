@@ -234,3 +234,46 @@ fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
             it.message.toString()
         }
 }
+
+fun saveToMainList(contactId: String, type: String) {
+    val refUser = "$NODE_MAIN_LIST/$UID/$contactId"
+    val refReceiver = "$NODE_MAIN_LIST/$contactId/$UID"
+
+    val mapUser = hashMapOf<String, Any>();
+    mapUser[CHILD_ID] = contactId;
+    mapUser[CHILD_TYPE] = type
+
+    val mapReceiver = hashMapOf<String, Any>()
+    mapReceiver[CHILD_ID] = UID;
+    mapReceiver[CHILD_TYPE] = type
+
+    val commonMap = hashMapOf<String, Any>();
+    commonMap[refUser] = mapUser;
+    commonMap[refReceiver] = mapReceiver;
+
+    REF_DATABASE_ROOT.updateChildren(commonMap)
+        .addOnFailureListener{
+            it.message.toString();
+        }
+}
+
+fun clearChat(contactId: String, function: () -> Unit){
+    REF_DATABASE_ROOT.child(NODE_MESSAGES).child(UID).child(contactId)
+        .removeValue()
+        .addOnFailureListener{it.message.toString()}
+        .addOnSuccessListener {
+            REF_DATABASE_ROOT.child(NODE_MESSAGES).child(contactId).child(UID)
+                .removeValue()
+                .addOnSuccessListener {
+                    function();
+                }
+        }
+}
+fun deleteChat(contactId: String, function: () -> Unit){
+    REF_DATABASE_ROOT.child(NODE_MAIN_LIST).child(UID).child(contactId)
+        .removeValue()
+        .addOnFailureListener{it.message.toString()}
+        .addOnSuccessListener {
+            function()
+        }
+}

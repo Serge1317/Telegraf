@@ -7,6 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +19,14 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.MenuProvider
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.telegraf.R
+import com.example.telegraf.database.NODE_MAIN_LIST
 import com.example.telegraf.databinding.FragmentSingleChatBinding
 import com.example.telegraf.models.CommonModel
 import com.example.telegraf.models.User
@@ -29,24 +36,30 @@ import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.database.NODE_MESSAGES
 import com.example.telegraf.database.NODE_USERS
 import com.example.telegraf.database.REF_DATABASE_ROOT
+import com.example.telegraf.database.TYPE_CHAT
 import com.example.telegraf.database.TYPE_MESSAGE_FILE
 import com.example.telegraf.database.TYPE_MESSAGE_IMAGE
 import com.example.telegraf.database.TYPE_MESSAGE_TEXT
 import com.example.telegraf.database.TYPE_MESSAGE_VOICE
 import com.example.telegraf.database.UID
+import com.example.telegraf.database.clearChat
+import com.example.telegraf.database.deleteChat
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getCommonModel
 import com.example.telegraf.database.getMessageKey
 import com.example.telegraf.database.getUserModel
+import com.example.telegraf.database.saveToMainList
 import com.example.telegraf.database.sendMessage
 import com.example.telegraf.database.uploadFileToStorage
 import com.example.telegraf.ui.message_recycler_view.views.AppViewFactory
+import com.example.telegraf.ui.screens.chat_list.ChatsFragment
 import com.example.telegraf.utilities.AppChildEventListener
 import com.example.telegraf.utilities.AppTextWatcher
 import com.example.telegraf.utilities.AppVoiceRecorder
 import com.example.telegraf.utilities.RECORD_AUDIO
 import com.example.telegraf.utilities.checkPermission
 import com.example.telegraf.utilities.getFilenameFromUri
+import com.example.telegraf.utilities.replaceFragment
 import com.example.telegraf.utilities.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DatabaseReference
@@ -54,7 +67,6 @@ import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 class SingleChatFragment(private val contact: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
@@ -134,6 +146,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         return binding.root;
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        addMenu()
+    }
+
     private fun initFields() {
         swipeLayout = binding.chatSwipeRefresh;
         chatLayoutManager = LinearLayoutManager(this.context);
@@ -155,6 +172,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                 showToast(getString(R.string.enter_message))
             } else {
                 sendMessage(message, contact.id, TYPE_MESSAGE_TEXT) {
+                    saveToMainList(contact.id, TYPE_CHAT)
                     binding.chatInputMessage.setText("");
                 }
             }
@@ -301,6 +319,36 @@ class SingleChatFragment(private val contact: CommonModel) :
 
         val photo = toolbarInfo.findViewById<ImageView>(R.id.chat_toolbar_photo)
         photo.downloadAndSetImage(receiveUser.photoUrl)
+    }
+
+    private fun addMenu() {
+        val menuHost: FragmentActivity = requireActivity()
+        menuHost.addMenuProvider(object: MenuProvider {
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater){
+                menuInflater.inflate(R.menu.single_chat_action_menu, menu);
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean{
+                return when(menuItem.itemId){
+                    R.id.menu_clear_chat -> {
+                        clearChat(contact.id){
+                            replaceFragment(ChatsFragment())
+                            showToast("The chat was cleared")
+                        }
+                        true;
+                    }
+                    R.id.menu_delete_chat -> {
+                        deleteChat(contact.id){
+                            replaceFragment(ChatsFragment())
+                            showToast("Chat was deleted")
+                        }
+                        true;
+                    }
+                    else -> false;
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED);
     }
 
     override fun onPause() {
