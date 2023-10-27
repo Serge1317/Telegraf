@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.screens.single_chat
+package com.example.telegraf.ui.screens.groups
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.telegraf.R
+import com.example.telegraf.database.NODE_GROUPS
 import com.example.telegraf.databinding.FragmentSingleChatBinding
 import com.example.telegraf.models.CommonModel
 import com.example.telegraf.models.User
@@ -34,23 +35,21 @@ import com.example.telegraf.utilities.AppValueEventListener
 import com.example.telegraf.database.NODE_MESSAGES
 import com.example.telegraf.database.NODE_USERS
 import com.example.telegraf.database.REF_DATABASE_ROOT
-import com.example.telegraf.database.TYPE_CHAT
 import com.example.telegraf.database.TYPE_MESSAGE_FILE
 import com.example.telegraf.database.TYPE_MESSAGE_IMAGE
 import com.example.telegraf.database.TYPE_MESSAGE_TEXT
 import com.example.telegraf.database.TYPE_MESSAGE_VOICE
-import com.example.telegraf.database.UID
 import com.example.telegraf.database.clearChat
 import com.example.telegraf.database.deleteChat
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getCommonModel
 import com.example.telegraf.database.getMessageKey
 import com.example.telegraf.database.getUserModel
-import com.example.telegraf.database.saveToMainList
-import com.example.telegraf.database.sendMessage
+import com.example.telegraf.database.sendMessageToGroup
 import com.example.telegraf.database.uploadFileToStorage
 import com.example.telegraf.ui.message_recycler_view.views.AppViewFactory
 import com.example.telegraf.ui.screens.main_list.MainListFragment
+import com.example.telegraf.ui.screens.single_chat.SingleChatAdapter
 import com.example.telegraf.utilities.AppChildEventListener
 import com.example.telegraf.utilities.AppTextWatcher
 import com.example.telegraf.utilities.AppVoiceRecorder
@@ -66,7 +65,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SingleChatFragment(private val contact: CommonModel) :
+class GroupChatFragment(private val group: CommonModel) :
     BaseFragment(R.layout.fragment_single_chat) {
 
     private var _binding: FragmentSingleChatBinding? = null
@@ -110,11 +109,11 @@ class SingleChatFragment(private val contact: CommonModel) :
 
         imageLauncher = registerForActivityResult(imageContract){uri: Uri? ->
             uri?.let{
-                val messageKey = getMessageKey(contact.id)
+                val messageKey = getMessageKey(group.id)
                 uploadFileToStorage(
                     uri,
                     messageKey,
-                    contact.id,
+                    group.id,
                     TYPE_MESSAGE_IMAGE
                 )
                 doSmoothScroll = true;
@@ -122,12 +121,12 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
         fileLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri: Uri? ->
             uri?.let{
-                val messageKey = getMessageKey(contact.id)
+                val messageKey = getMessageKey(group.id)
                 val filename = getFilenameFromUri(uri)
                 uploadFileToStorage(
                     uri,
                     messageKey,
-                    contact.id,
+                    group.id,
                     TYPE_MESSAGE_FILE,
                     filename
                 )
@@ -169,8 +168,7 @@ class SingleChatFragment(private val contact: CommonModel) :
             if (message.isEmpty()) {
                 showToast(getString(R.string.enter_message))
             } else {
-                sendMessage(message, contact.id, TYPE_MESSAGE_TEXT) {
-                    saveToMainList(contact.id, TYPE_CHAT)
+                sendMessageToGroup(message, group.id, TYPE_MESSAGE_TEXT) {
                     binding.chatInputMessage.setText("");
                 }
             }
@@ -196,7 +194,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                 if (checkPermission(RECORD_AUDIO)) {
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         isRecording = true;
-                        val messageKey = getMessageKey(contact.id);
+                        val messageKey = getMessageKey(group.id);
                         voiceRecorder.startRecord(messageKey);
                         binding.chatInputMessage.setText("Запись...")
                         binding.chatBtnVoice.setColorFilter(R.color.primary);
@@ -206,7 +204,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                             uploadFileToStorage(
                                 Uri.fromFile(file),
                                 messageKey,
-                                contact.id,
+                                group.id,
                                 TYPE_MESSAGE_VOICE
                             )
                             doSmoothScroll = true;
@@ -239,9 +237,9 @@ class SingleChatFragment(private val contact: CommonModel) :
         chatRecycler.setHasFixedSize(true);
         chatRecycler.isNestedScrollingEnabled = false;
 
-        refMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES)
-            .child(UID)
-            .child(contact.id)
+        refMessages = REF_DATABASE_ROOT.child(NODE_GROUPS)
+            .child(group.id)
+            .child(NODE_MESSAGES);
 
         chatListener = AppChildEventListener {
             val message = it.getCommonModel();
@@ -301,14 +299,14 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
         refDatabase = REF_DATABASE_ROOT
             .child(NODE_USERS)
-            .child(contact.id)
+            .child(group.id)
         refDatabase.addValueEventListener(toolbarInfoListener)
     }
 
     private fun initToolbarInfo() {
         val fullName = toolbarInfo.findViewById<TextView>(R.id.chat_contact_fullname)
         if (receiveUser.fullname.isEmpty())
-            fullName.text = contact.fullname;
+            fullName.text = group.fullname;
         else
             fullName.text = receiveUser.fullname
 
@@ -330,14 +328,14 @@ class SingleChatFragment(private val contact: CommonModel) :
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean{
                 return when(menuItem.itemId){
                     R.id.menu_clear_chat -> {
-                        clearChat(contact.id){
+                        clearChat(group.id){
                             replaceFragment(MainListFragment())
                             showToast("The chat was cleared")
                         }
                         true;
                     }
                     R.id.menu_delete_chat -> {
-                        deleteChat(contact.id){
+                        deleteChat(group.id){
                             replaceFragment(MainListFragment())
                             showToast("Chat was deleted")
                         }

@@ -34,7 +34,6 @@ class ChangeBioFragment : BaseChangeFragment(R.layout.fragment_change_bio) {
         binding.settingsInputBio.setText(USER.bio);
     }
 
-
     override fun change() {
         val newBio = binding.settingsInputBio.text.toString();
         changeBioToDatabase(newBio)

@@ -38,5 +38,9 @@
     <dimen name="bottom_sheet_btn_margin">6dp</dimen>
     <dimen name="message_filename_margin">4dp</dimen>
 
+<!--    add_contact_item_choice-->
+    <dimen name="ic_item_choice_width_height">25dp</dimen>
+    <dimen name="add_item_choice_border">1dp</dimen>
+
 
 </resources>

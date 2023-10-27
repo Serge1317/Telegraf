@@ -6,10 +6,12 @@ import android.view.View
 import android.widget.ImageView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegraf.R
-import com.example.telegraf.ui.screens.ContactsFragment
+import com.example.telegraf.ui.screens.contacts.ContactsFragment
 import com.example.telegraf.ui.screens.settings.SettingsFragment
 import com.example.telegraf.utilities.APP_ACTIVITY
 import com.example.telegraf.database.USER
+import com.example.telegraf.ui.screens.groups.AddContactAdapter
+import com.example.telegraf.ui.screens.groups.AddContactFragment
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.replaceFragment
 import com.mikepenz.materialdrawer.AccountHeader
@@ -52,7 +54,6 @@ class AppDrawer {
         APP_ACTIVITY.toolbar.setNavigationOnClickListener {
             APP_ACTIVITY.supportFragmentManager.popBackStack()
         }
-
     }
 
     private fun createDrawer() {
@@ -122,6 +123,10 @@ class AppDrawer {
 
     private fun clickOnItem(position: Int): Boolean {
         return when (position) {
+            1 -> {
+                replaceFragment(AddContactFragment())
+                true
+            }
             4 -> {
                 replaceFragment(ContactsFragment());
                 true;

@@ -1,7 +1,5 @@
 package com.example.telegraf.utilities
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import java.io.File

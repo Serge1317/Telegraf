@@ -36,7 +36,6 @@ class ChangeUsernameFragment : BaseChangeFragment(R.layout.fragment_change_usern
         _binding = null;
     }
 
-
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle);
         binding.settingsInputUsername.setText(USER.username)

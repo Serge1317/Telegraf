@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.screens.chat_list
+package com.example.telegraf.ui.screens.main_list
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegraf.R
+import com.example.telegraf.database.TYPE_CHAT
+import com.example.telegraf.database.TYPE_GROUP
 import com.example.telegraf.models.CommonModel
+import com.example.telegraf.ui.screens.groups.GroupChatFragment
 import com.example.telegraf.ui.screens.single_chat.SingleChatFragment
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.utilities.replaceFragment
 
-class ChatAdapter(): RecyclerView.Adapter<ChatAdapter.ChatHolder>() {
+class MainListAdapter(): RecyclerView.Adapter<MainListAdapter.ChatHolder>() {
 
     private val chatList = mutableListOf<CommonModel>();
 
@@ -29,8 +32,11 @@ class ChatAdapter(): RecyclerView.Adapter<ChatAdapter.ChatHolder>() {
 
         val holder = ChatHolder(view);
         holder.itemView.setOnClickListener{
-            val contact = chatList[holder.bindingAdapterPosition]
-            replaceFragment(SingleChatFragment(contact))
+            val chatModel = chatList[holder.bindingAdapterPosition]
+            when(chatModel.type){
+                TYPE_CHAT -> replaceFragment(SingleChatFragment(chatModel))
+                TYPE_GROUP -> replaceFragment(GroupChatFragment(chatModel))
+            }
         }
         return holder;
     }

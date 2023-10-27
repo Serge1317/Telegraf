@@ -22,5 +22,4 @@ fun checkPermission(permission: String): Boolean {
     } else {
         true;
     }
-
 }

@@ -97,7 +97,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.settingsStatus.text = USER.state;
         binding.settingsUsername.text = USER.username
         binding.settingsUserPhoto.downloadAndSetImage(USER.photoUrl)
-
     }
 
     private fun setListeners() {

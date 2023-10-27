@@ -1,4 +1,4 @@
-package com.example.telegraf.ui.screens
+package com.example.telegraf.ui.screens.contacts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +18,7 @@ import com.example.telegraf.database.REF_DATABASE_ROOT
 import com.example.telegraf.database.UID
 import com.example.telegraf.utilities.downloadAndSetImage
 import com.example.telegraf.database.getCommonModel
+import com.example.telegraf.ui.screens.BaseFragment
 import com.example.telegraf.utilities.replaceFragment
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -104,6 +105,5 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
         val name: TextView = view.findViewById(R.id.contact_fullname);
         val status: TextView = view.findViewById(R.id.contact_status)
         val image: CircleImageView = view.findViewById(R.id.contact_photo);
-
     }
 }

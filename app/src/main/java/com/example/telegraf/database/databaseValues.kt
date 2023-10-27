@@ -29,6 +29,12 @@ const val NODE_MAIN_LIST = "main_list"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
 const val FOLDER_FILE_MESSAGE = "file_message"
+const val NODE_GROUPS = "groups"
+const val NODE_MEMBERS = "members"
+const val FOLDER_GROUP_IMAGE = "group_image"
+const val USER_CREATOR = "creator"
+const val USER_MEMBER = "member"
+const val USER_ADMIN = "admin"
 
 const val CHILD_ID = "id"
 const val CHILD_PHONE = "phone"

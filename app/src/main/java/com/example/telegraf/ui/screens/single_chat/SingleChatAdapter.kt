@@ -14,7 +14,6 @@ class SingleChatAdapter() : RecyclerView.Adapter<Holder>() {
     private val holderList = mutableListOf<MessageHolder>();
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-
         return AppHolderFactory.getViewHolder(parent, viewType);
     }
 

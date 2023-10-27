@@ -10,5 +10,4 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         super.onStart()
         APP_ACTIVITY.mAppDrawer.drawerDisable();
     }
-
 }
